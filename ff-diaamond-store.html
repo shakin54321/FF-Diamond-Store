@@ -855,6 +855,34 @@ select.input option { background: #0d1330; }
   100%{background-position:100% 80%,0% 20%,100% 50%;opacity:.62}
 }
 
+
+/* Stable card motion + cute decorative micro-animations */
+.card-scene{perspective:1200px!important;transform:none!important}
+.card-enter{animation:cardSoftEnter .9s cubic-bezier(.2,.75,.25,1) .12s both!important;transform-style:preserve-3d!important}
+@keyframes cardSoftEnter{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:blur(0)}}
+.card-float{animation:float 8s ease-in-out infinite!important;transform-style:preserve-3d!important}
+.card-rot{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;transform-style:preserve-3d!important;transition:transform .32s cubic-bezier(.2,.7,.2,1)!important;will-change:transform}
+#card3d.is-flipped{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important}
+#card3d .card-back{display:none!important}
+#card3d .card-face{transform:translateZ(2px)!important;backface-visibility:visible!important;-webkit-backface-visibility:visible!important;isolation:isolate}
+#card3d .card-layer{display:block!important}
+#card3d .card-bg{isolation:isolate}
+#card3d .card-bg::after{
+ content:"";position:absolute;inset:-15%;pointer-events:none;z-index:2;
+ background:radial-gradient(circle at 20% 30%,rgba(255,255,226,.68),transparent 22%),radial-gradient(circle at 78% 70%,rgba(255,188,65,.5),transparent 28%),linear-gradient(115deg,transparent 32%,rgba(255,255,255,.24) 49%,transparent 65%);
+ background-size:150% 150%,150% 150%,220% 100%;animation:cardInnerGlow 7s ease-in-out infinite alternate;mix-blend-mode:screen;
+}
+@keyframes cardInnerGlow{0%{background-position:0% 10%,100% 90%,0% 50%;opacity:.48}50%{opacity:.9}100%{background-position:100% 90%,0% 10%,100% 50%;opacity:.62}}
+.cute-sparkle{position:absolute;z-index:4;pointer-events:none;color:#fff8d9;text-shadow:0 0 7px #fff2ad,0 0 16px rgba(255,196,74,.95);font-size:clamp(13px,2.6vw,21px);line-height:1;animation:cuteTwinkle 2.8s ease-in-out infinite}
+.sparkle-one{left:15%;top:22%;animation-delay:-.4s}.sparkle-two{right:19%;top:35%;font-size:clamp(17px,3vw,25px);animation-delay:-1.5s}.sparkle-three{left:66%;bottom:17%;font-size:clamp(10px,2vw,16px);animation-delay:-2.1s}
+@keyframes cuteTwinkle{0%,100%{opacity:.25;transform:scale(.65) rotate(0deg)}45%{opacity:1;transform:scale(1.25) rotate(28deg)}70%{opacity:.72;transform:scale(.92) rotate(48deg)}}
+.cute-orbit{position:absolute;z-index:3;pointer-events:none;width:28%;aspect-ratio:1;border:1px solid rgba(255,247,208,.3);border-radius:50%;right:8%;top:13%;box-shadow:0 0 13px rgba(255,210,112,.16),inset 0 0 12px rgba(255,240,190,.12);animation:orbitDrift 9s linear infinite}
+.cute-orbit::before{content:"";position:absolute;width:7px;height:7px;left:12%;top:16%;border-radius:50%;background:#fff7c9;box-shadow:0 0 8px 3px rgba(255,221,133,.8)}
+@keyframes orbitDrift{to{transform:rotate(360deg)}}
+#card3d .card-face::after{animation:metallicSweep 6.5s ease-in-out infinite!important}
+.card-shadow{animation:shadowPulse 8s ease-in-out infinite!important}
+@media(prefers-reduced-motion:reduce){.card-enter,.card-float,.card-shadow,.cute-sparkle,.cute-orbit,#card3d .card-bg::after,#card3d .card-face::after{animation:none!important}.card-rot{transition:none!important}}
+
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
@@ -930,6 +958,10 @@ document.documentElement.classList.add('js');
                   <svg class="card-wm ico ico-gem" aria-hidden="true"><use href="#i-gem"/></svg>
                   <div class="card-sheen"></div>
                   <div class="card-glare"></div>
+                   <span class="cute-sparkle sparkle-one" aria-hidden="true">✦</span>
+                   <span class="cute-sparkle sparkle-two" aria-hidden="true">✧</span>
+                   <span class="cute-sparkle sparkle-three" aria-hidden="true">✦</span>
+                   <span class="cute-orbit" aria-hidden="true"></span>
                 </div>
                 <div class="card-content">
                   <div class="card-top">
@@ -1438,7 +1470,7 @@ document.documentElement.classList.add('js');
     // Flip interaction intentionally disabled; keep pointer tilt only.
     if (reduced) return;
 
-    const MAX = 15;                       // max tilt in degrees
+    const MAX = 8;                        // gentle tilt to prevent visual snapping
     let cx = 0; let cy = 0;              // current rotation
     let tx = 0; let ty = 0;              // target rotation
     let raf = 0; let visible = true; let touching = false;
@@ -1446,7 +1478,7 @@ document.documentElement.classList.add('js');
 
     function paint() {
       raf = 0;
-      cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
+      cx += (tx - cx) * 0.085; cy += (ty - cy) * 0.085;
       const nx = cy / MAX; const ny = -cx / MAX; // -1..1 in screen terms
       card.style.setProperty('--rx', `${cx.toFixed(2)}deg`);
       card.style.setProperty('--ry', `${cy.toFixed(2)}deg`);
@@ -1480,21 +1512,9 @@ document.documentElement.classList.add('js');
     scene.addEventListener('pointerup', endTouch);
     scene.addEventListener('pointercancel', endTouch);
 
-    // Device motion (Android works directly; iOS asks permission on first tap)
-    if ('DeviceOrientationEvent' in window && window.matchMedia('(pointer: coarse)').matches) {
-      const onTilt = (e) => {
-        if (touching || e.gamma === null || e.beta === null) return;
-        aim(clamp(e.gamma, -25, 25) / 25, clamp(e.beta - 45, -25, 25) / 25);
-      };
-      const attach = () => window.addEventListener('deviceorientation', onTilt, { passive: true });
-      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        scene.addEventListener('click', () => {
-          DeviceOrientationEvent.requestPermission().then((s) => { if (s === 'granted') attach(); }).catch(() => {});
-        }, { once: true });
-      } else attach();
-    }
+    // Device-motion tilt disabled: inconsistent Android sensors can cause sudden visual jumps.
 
-    // Stop work when off-screen
+        // Stop work when off-screen
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) schedule(); }).observe(scene);
     }
