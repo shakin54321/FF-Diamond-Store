@@ -1485,11 +1485,15 @@ document.documentElement.classList.add('js');
         if (balanceValue) balanceValue.textContent = '$ ' + balanceFormat.format(demoBalance);
       };
       updateDemoBalance();
-      window.setInterval(() => {
-        // Decorative demo animation only: gently decrease, then loop back to $44,000.
-        demoBalance = demoBalance <= 20000 ? 44000 : Math.max(20000, demoBalance - (1 + Math.random() * 8));
+      const runBalanceTick = () => {
+        // Decorative demo only: vary both the delay and the amount, then loop back to $44,000.
+        const decrease = Math.round(10 + Math.random() * 490); // random $10–$500
+        demoBalance = demoBalance - decrease <= 20000 ? 44000 : demoBalance - decrease;
         updateDemoBalance();
-      }, 1000);
+        const nextDelay = 1000 + Math.random() * 9000; // random 1–10 seconds
+        window.setTimeout(runBalanceTick, nextDelay);
+      };
+      window.setTimeout(runBalanceTick, 1000 + Math.random() * 9000);
       balance.addEventListener('click', () => {
       const revealed = balance.classList.toggle('is-revealed');
       balance.setAttribute('aria-pressed', String(revealed));
