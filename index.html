@@ -667,594 +667,230 @@ select.input option { background: #0d1330; }
 @media(max-width:480px){.card-content{padding:1.45em 1.5em}.card-brand-right span{font-size:1.9em}}
 
 
-/* Final card correction: level, stable, front-facing gold card */
-.card-scene{perspective:none!important;transform:none!important}
-.card-enter{animation:none!important;transform:none!important;transform-style:preserve-3d!important}
-.card-float{animation:float 7s ease-in-out infinite!important;transform-style:preserve-3d!important;will-change:transform}
-.card-rot{transform-style:preserve-3d!important;will-change:transform}
-.card-layer{display:block!important}
-.card-face{
-  transform:none!important;
-  overflow:hidden;
-  border-radius:clamp(12px,3vw,24px);
-  background:#dfb65e;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 22px 38px -22px rgba(220,170,68,.45),0 16px 32px -18px rgba(0,0,0,.65);
-}
-.card-bg{
-  background:
-    linear-gradient(132deg,transparent 0 15%,rgba(255,255,255,.34) 15.2% 28%,transparent 28.2% 100%),
-    linear-gradient(48deg,transparent 0 30%,rgba(255,255,255,.24) 30.2% 47%,transparent 47.2% 100%),
-    linear-gradient(118deg,transparent 0 53%,rgba(255,244,207,.32) 53.2% 70%,transparent 70.2% 100%),
-    linear-gradient(155deg,#f6df9f 0%,#d9ad52 48%,#f2d58d 72%,#c99535 100%);
-}
-.card-bg::before{
-  opacity:1;
-  background:
-    linear-gradient(145deg,transparent 0 19%,rgba(255,255,255,.26) 19.2% 31%,transparent 31.2%),
-    linear-gradient(35deg,transparent 0 40%,rgba(255,255,255,.23) 40.2% 54%,transparent 54.2%),
-    linear-gradient(110deg,transparent 0 68%,rgba(255,255,255,.18) 68.2% 82%,transparent 82.2%);
-}
-.card-sheen,.card-glare{display:none!important}
-.card-content{transform:none!important;padding:1.65em 1.85em}
-.card-top,.card-mid,.card-bot{transform:none!important}
-.card-brand-right span{font-size:2em;letter-spacing:-.06em}
-.card-triangle{display:none}
-.card-shadow{animation:none!important;filter:blur(7px);opacity:.55}
-@media(max-width:480px){
-  .card-content{padding:1.35em 1.45em}
-  .card-brand-right span{font-size:1.85em}
-}
-
-
-/* Realistic demo bank-card details + restore 3D motion */
-.card-enter{animation:cardIn 1.25s cubic-bezier(.16,.84,.3,1) .15s both!important;transform-style:preserve-3d!important}
-.card-float{animation:float 7s ease-in-out infinite!important;transform-style:preserve-3d!important}
-.card-rot{
-  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
-  transform-style:preserve-3d!important;
-  transition:transform .22s ease-out;
-  cursor:pointer;
-}
-.card-rot.is-flipped{transform:rotateX(var(--rx,0deg)) rotateY(calc(var(--ry,0deg) + 180deg))!important}
-.card-layer{display:block!important;transform:translateZ(-1.2px)!important}
-.card-layer.l2{transform:translateZ(-2.4px)!important}
-.card-layer.l3{transform:translateZ(-3.6px)!important}
-.card-face,.card-back{
-  position:absolute;inset:0;border-radius:clamp(12px,3vw,24px);
-  overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-}
-.card-face{transform:translateZ(1px)!important}
-.card-back{
-  transform:rotateY(180deg) translateZ(1px);
-  background:linear-gradient(145deg,#f3d88e,#c9973b 55%,#f2d99d);
-  color:#49381e;
-  border:1px solid rgba(255,245,205,.9);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 25px 45px -25px rgba(0,0,0,.55);
-}
-.back-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.25),transparent 42%),linear-gradient(35deg,transparent 35%,rgba(255,255,255,.2) 35.2% 48%,transparent 48.2%)}
-.back-stripe{position:absolute;left:0;right:0;top:19%;height:23%;background:linear-gradient(#343434,#111);box-shadow:0 1px 2px rgba(255,255,255,.25)}
-.back-sign-row{position:absolute;left:8%;right:8%;top:52%;display:flex;align-items:center;gap:3%;height:24%}
-.back-sign-row>span{position:absolute;left:0;top:-1.2em;font:600 .45em var(--font-body);letter-spacing:.1em;color:#70562b}
-.back-sign{height:100%;flex:1;background:repeating-linear-gradient(0deg,#f5edda 0 2px,#e8dfc9 2px 4px);display:flex;align-items:center;padding:0 .7em;font:italic 1.05em Georgia;color:#5e4b31}
-.back-cvv{width:18%;height:100%;background:#fff8e9;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.back-cvv small{font:700 .48em var(--font-body);color:#80653a}
-.back-cvv b{font:800 .9em var(--mono);letter-spacing:.12em;color:#332719}
-.back-copy{position:absolute;left:8%;bottom:13%;font:600 .43em var(--font-body);letter-spacing:.08em;color:#745a2d}
-.back-logo{position:absolute;right:7%;bottom:8%;font:900 1.15em var(--font-display);font-style:italic;color:#c91c2b}
-.back-logo small{display:block;text-align:right;font:700 .36em var(--font-body);letter-spacing:.2em}
-.card-number{font:700 1.12em/1 var(--mono);letter-spacing:.12em;color:#49381e;text-shadow:0 1px rgba(255,255,255,.4);transform:translateZ(24px);white-space:nowrap}
-.card-holder{margin-left:auto;text-align:right}
-.card-holder small{font-size:.48em!important}
-.card-holder b{font-size:.68em!important;letter-spacing:.04em!important}
-.card-mark{font:800 .62em var(--font-display);letter-spacing:.1em;color:#7b5b28;border:1px solid rgba(100,70,25,.35);border-radius:5px;padding:.35em .5em}
-.card-expiry{gap:.8em}
-.card-content{transform-style:preserve-3d}
-.card-top,.card-mid,.card-bot{transform:translateZ(16px)!important}
-.card-sheen{display:block!important}
-.card-glare{display:block!important}
-.card-shadow{animation:shadowPulse 7s ease-in-out infinite!important}
-@media(max-width:480px){
- .card-number{font-size:1em;letter-spacing:.08em}
- .back-copy{font-size:.36em}
-}
-@media(prefers-reduced-motion:reduce){
- .card-enter,.card-float,.card-shadow{animation:none!important}
- .card-rot{transition:none!important}
-}
-
-
-/* Fix reverse-side rendering and restore depth + animated metallic lighting */
-.card-scene{perspective:1250px!important;transform:none!important}
-.card-enter,.card-float{transform-style:preserve-3d!important}
-.card-rot{
-  transform-style:preserve-3d!important;
-  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
-  transition:transform .18s ease-out;
-  isolation:isolate;
-}
-.card-rot.is-flipped{
-  transform:rotateX(var(--rx,0deg)) rotateY(calc(var(--ry,0deg) + 180deg))!important;
-}
-.card-face,.card-back{
-  position:absolute!important;inset:0!important;
-  border-radius:clamp(12px,3vw,24px)!important;
-  overflow:hidden!important;
-  backface-visibility:hidden!important;
-  -webkit-backface-visibility:hidden!important;
-}
-.card-face{
-  transform:translateZ(2px)!important;
-  background:linear-gradient(135deg,#f8e3a7 0%,#d7a847 35%,#f7dfa0 62%,#bd872e 100%)!important;
-}
-.card-back{
-  display:block!important;
-  transform:rotateY(180deg) translateZ(2px)!important;
-  background:
-    linear-gradient(145deg,rgba(255,255,255,.4),transparent 36%),
-    linear-gradient(125deg,#f7e2a5 0%,#d4a346 48%,#f0d48d 100%)!important;
-  color:#49381e!important;
-  opacity:1!important;
-  visibility:visible!important;
-  z-index:2;
-}
-.card-back .back-bg{background:linear-gradient(135deg,rgba(255,255,255,.32),transparent 42%),linear-gradient(35deg,transparent 35%,rgba(255,255,255,.22) 35.2% 48%,transparent 48.2%)!important}
-.card-back .back-stripe{background:linear-gradient(180deg,#414141,#090909 48%,#303030)!important}
-.card-face::after,.card-back::after{
-  content:"";position:absolute;inset:-45% -80%;z-index:8;pointer-events:none;
-  background:linear-gradient(108deg,transparent 39%,rgba(255,255,255,.05) 44%,rgba(255,255,255,.58) 49%,rgba(255,239,190,.18) 53%,transparent 61%);
-  transform:translateX(-65%) rotate(7deg);
-  animation:metallicSweep 5.8s ease-in-out infinite;
-  mix-blend-mode:screen;
-}
-.card-back::after{animation-delay:1.4s;opacity:.65}
-@keyframes metallicSweep{
-  0%,12%{transform:translateX(-65%) rotate(7deg);opacity:0}
-  25%{opacity:.9}
-  62%,100%{transform:translateX(65%) rotate(7deg);opacity:0}
-}
-.card-bg::after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 45%,rgba(255,250,225,.28),transparent 60%);
-  animation:goldPulse 4.2s ease-in-out infinite alternate;
-}
-@keyframes goldPulse{from{opacity:.28}to{opacity:.78}}
-.card-number{letter-spacing:.105em;text-shadow:0 1px 0 rgba(255,255,255,.65),0 -1px 0 rgba(120,83,28,.18)}
-.chip{border:1px solid rgba(94,65,24,.65);background:linear-gradient(135deg,#b98434,#f7df9a 28%,#c18c3b 54%,#f1d28a 76%,#a8752a)!important}
-@media(prefers-reduced-motion:reduce){
- .card-face::after,.card-back::after,.card-bg::after{animation:none!important}
-}
-
-
-/* Front-only card: disable every flip state while keeping 3D tilt and lighting */
-#card3d.is-flipped{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important}
-#card3d .card-back{display:none!important}
-#card3d .card-face{backface-visibility:visible!important;-webkit-backface-visibility:visible!important}
-#card3d .card-face::before{
-  content:"";position:absolute;inset:-25%;z-index:7;pointer-events:none;border-radius:inherit;
-  background:
-    radial-gradient(ellipse at 22% 28%,rgba(255,250,213,.78),transparent 30%),
-    radial-gradient(ellipse at 78% 72%,rgba(255,190,54,.42),transparent 34%),
-    radial-gradient(ellipse at 52% 48%,rgba(255,255,255,.18),transparent 48%);
-  background-size:160% 160%;mix-blend-mode:screen;opacity:.72;
-  animation:innerGoldLighting 6.5s ease-in-out infinite alternate;
-}
-#card3d .card-bg::after{
-  background:
-    radial-gradient(ellipse at 20% 30%,rgba(255,255,225,.58),transparent 35%),
-    radial-gradient(ellipse at 82% 72%,rgba(255,174,34,.38),transparent 38%),
-    linear-gradient(115deg,transparent 20%,rgba(255,255,255,.13) 48%,transparent 70%)!important;
-  background-size:150% 150%,150% 150%,220% 100%!important;
-  animation:innerGoldLighting 7s ease-in-out infinite alternate!important;
-}
-@keyframes innerGoldLighting{
-  0%{background-position:0% 20%,100% 80%,0% 50%;opacity:.42}
-  50%{opacity:.82}
-  100%{background-position:100% 80%,0% 20%,100% 50%;opacity:.62}
-}
-
-
-/* Stable card motion + cute decorative micro-animations */
-.card-scene{perspective:1200px!important;transform:none!important}
-.card-enter{animation:cardSoftEnter .9s cubic-bezier(.2,.75,.25,1) .12s both!important;transform-style:preserve-3d!important}
-@keyframes cardSoftEnter{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:blur(0)}}
-.card-float{animation:float 8s ease-in-out infinite!important;transform-style:preserve-3d!important}
-.card-rot{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;transform-style:preserve-3d!important;transition:transform .32s cubic-bezier(.2,.7,.2,1)!important;will-change:transform}
-#card3d.is-flipped{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important}
-#card3d .card-back{display:none!important}
-#card3d .card-face{transform:translateZ(2px)!important;backface-visibility:visible!important;-webkit-backface-visibility:visible!important;isolation:isolate}
-#card3d .card-layer{display:block!important}
-#card3d .card-bg{isolation:isolate}
-#card3d .card-bg::after{
- content:"";position:absolute;inset:-15%;pointer-events:none;z-index:2;
- background:radial-gradient(circle at 20% 30%,rgba(255,255,226,.68),transparent 22%),radial-gradient(circle at 78% 70%,rgba(255,188,65,.5),transparent 28%),linear-gradient(115deg,transparent 32%,rgba(255,255,255,.24) 49%,transparent 65%);
- background-size:150% 150%,150% 150%,220% 100%;animation:cardInnerGlow 7s ease-in-out infinite alternate;mix-blend-mode:screen;
-}
-@keyframes cardInnerGlow{0%{background-position:0% 10%,100% 90%,0% 50%;opacity:.48}50%{opacity:.9}100%{background-position:100% 90%,0% 10%,100% 50%;opacity:.62}}
-.cute-orbit::before{content:"";position:absolute;width:7px;height:7px;left:12%;top:16%;border-radius:50%;background:#fff7c9;box-shadow:0 0 8px 3px rgba(255,221,133,.8)}
-#card3d .card-face::after{animation:metallicSweep 6.5s ease-in-out infinite!important}
-.card-shadow{animation:shadowPulse 8s ease-in-out infinite!important}
-@media(prefers-reduced-motion:reduce){.card-enter,.card-float,.card-shadow,#card3d .card-bg::after,#card3d .card-face::after{animation:none!important}.card-rot{transition:none!important}}
-
-
-/* Clean final card interaction: no orbit decorations; stable single transform owner */
-.card-scene{perspective:1100px!important;touch-action:pan-y}
-.card-enter{animation:cardSoftEnter .9s cubic-bezier(.2,.75,.25,1) .12s both!important;transform:none!important;filter:none}
-.card-float{animation:none!important;transform:none!important;transform-style:preserve-3d!important}
-#card3d.card-rot{
-  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
-  transform-style:preserve-3d!important;
-  transition:transform .08s linear!important;
-  will-change:transform;
-  touch-action:none;
-  user-select:none;-webkit-user-select:none;
-  cursor:grab;
-}
-#card3d.card-rot:active{cursor:grabbing}
-@media(prefers-reduced-motion:reduce){#card3d.card-rot{transition:none!important}}
-
-
-
-/* FINAL MOBILE CARD REBUILD: one transform owner, real depth, lightweight rendering */
+/* =================== CARD: single clean style system =================== */
 .card-scene{
-  perspective:1000px!important;
-  perspective-origin:50% 45%!important;
+  --cw:min(84vw,400px);
+  position:relative;
+  width:var(--cw);
+  margin:clamp(1.8rem,4.5vw,2.8rem) auto 0;
+  perspective:1100px;
+  perspective-origin:50% 45%;
   touch-action:pan-y;
 }
-.card-enter,.card-float{
-  animation:none!important;
-  transform:none!important;
-  filter:none!important;
-  transform-style:preserve-3d!important;
+.card-enter{
+  transform-style:preserve-3d;
+  animation:cardEntrance .85s cubic-bezier(.2,.8,.25,1) both;
+}
+@keyframes cardEntrance{
+  from{opacity:0;filter:blur(3px)}
+  to{opacity:1;filter:blur(0)}
+}
+.card-float{
+  transform-style:preserve-3d;
+  animation:cardFloat 5.8s ease-in-out infinite;
+  will-change:transform;
+}
+@keyframes cardFloat{
+  0%,100%{transform:translate3d(0,0,0)}
+  50%{transform:translate3d(0,-11px,0)}
 }
 #card3d.card-rot{
-  position:relative!important;
-  display:block!important;
-  aspect-ratio:1.586 / 1!important;
-  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
-  transform-style:preserve-3d!important;
-  transition:none!important;
+  position:relative;
+  display:block;
+  aspect-ratio:1.586 / 1;
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transform-style:preserve-3d;
+  transition:none;
   will-change:transform;
-  touch-action:none!important;
-  user-select:none;-webkit-user-select:none;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
   cursor:grab;
 }
+#card3d.card-rot:active{cursor:grabbing}
+#card3d .card-layer,
+#card3d .card-face{
+  position:absolute;
+  inset:0;
+  border-radius:clamp(12px,3vw,24px);
+}
 #card3d .card-layer{
-  display:block!important;
-  position:absolute!important;inset:0!important;
-  border-radius:clamp(12px,3vw,24px)!important;
-  background:linear-gradient(145deg,#f6e6b8,#b88737 55%,#f4d995)!important;
-  border:1px solid rgba(255,239,190,.55)!important;
+  display:block;
+  background:linear-gradient(145deg,#f6e6b8,#b88737 55%,#f4d995);
+  border:1px solid rgba(255,239,190,.55);
   box-shadow:0 2px 3px rgba(0,0,0,.3);
 }
-#card3d .card-layer.l1{transform:translateZ(-2px)!important}
-#card3d .card-layer.l2{transform:translateZ(-4px)!important}
-#card3d .card-layer.l3{transform:translateZ(-6px)!important}
+#card3d .card-layer.l1{transform:translateZ(-2px)}
+#card3d .card-layer.l2{transform:translateZ(-4px)}
+#card3d .card-layer.l3{transform:translateZ(-6px)}
 #card3d .card-face{
-  position:absolute!important;inset:0!important;
-  display:block!important;
-  overflow:hidden!important;
-  border-radius:clamp(12px,3vw,24px)!important;
-  transform:translateZ(2px)!important;
-  transform-style:preserve-3d!important;
-  backface-visibility:visible!important;
-  -webkit-backface-visibility:visible!important;
-  background:linear-gradient(128deg,#f5e7c1 0%,#d4b879 24%,#8e7956 48%,#d6bd88 72%,#24304e 100%)!important;
-  border:1px solid rgba(255,239,196,.7)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -18px 28px rgba(9,15,38,.22),0 18px 28px -17px rgba(0,0,0,.8)!important;
+  display:block;
+  overflow:hidden;
+  isolation:isolate;
+  transform:translateZ(2px);
+  transform-style:preserve-3d;
+  backface-visibility:visible;
+  -webkit-backface-visibility:visible;
+  color:#303044;
+  border:1px solid rgba(255,239,196,.78);
+  background:linear-gradient(135deg,#f3dfa9 0%,#d6ad55 38%,#f5dfaa 67%,#bd8a32 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.88),inset 0 -1px 0 rgba(128,85,26,.3),inset 0 0 28px rgba(255,248,220,.22),0 18px 30px -17px rgba(0,0,0,.78);
 }
+#card3d .card-back{display:none}
 #card3d .card-bg{
-  position:absolute!important;inset:0!important;
-  overflow:hidden!important;border-radius:inherit!important;
-  background:
-    linear-gradient(180deg,transparent 0 78%,rgba(8,15,39,.72) 78% 100%),
-    linear-gradient(112deg,rgba(255,255,255,.38),transparent 28%,rgba(255,255,255,.13) 48%,transparent 68%),
-    linear-gradient(135deg,#e5d7b7 0%,#9c8b6e 34%,#3c4562 72%,#101a38 100%)!important;
-}
-#card3d .card-wm{display:none!important}
-#card3d .card-sheen,#card3d .card-glare{display:none!important}
-#card3d .card-face::before,#card3d .card-face::after,
-#card3d .card-bg::before,#card3d .card-bg::after{display:none!important;animation:none!important}
-#card3d .card-content{
-  position:absolute!important;inset:0!important;
-  display:flex!important;flex-direction:column!important;justify-content:space-between!important;
-  padding:1.55em 1.7em!important;
-  transform:none!important;transform-style:preserve-3d!important;
-}
-#card3d .card-top,#card3d .card-mid,#card3d .card-bot{transform:translateZ(14px)!important}
-#card3d .chip{
-  width:3.7em!important;height:2.8em!important;flex:0 0 auto!important;
-  border-radius:.55em!important;
-  background:linear-gradient(135deg,#b98434,#f7df9a 28%,#c18c3b 54%,#f1d28a 76%,#a8752a)!important;
-  box-shadow:inset 0 0 0 1px rgba(93,63,23,.62),0 .25em .7em rgba(80,53,17,.2)!important;
-}
-#card3d .card-brand-right span{color:#df2438!important;text-shadow:0 1px 1px rgba(0,0,0,.2)}
-#card3d .card-brand-right small{color:#8d2632!important}
-#card3d.card-rot:active{cursor:grabbing}
-.card-shadow{animation:none!important;filter:blur(5px)!important;opacity:.42!important}
-@media(max-width:480px){#card3d .card-content{padding:1.35em 1.45em!important}}
-@media(prefers-reduced-motion:reduce){#card3d.card-rot{transition:none!important}}
-
-
-
-/* Card detail layout inspired by the supplied gold-card reference.
-   Text/content is intentionally untouched. */
-#card3d .card-face{
-  background:linear-gradient(135deg,#f3dfa9 0%,#d6ad55 38%,#f5dfaa 67%,#bd8a32 100%)!important;
-  color:#303044!important;
-}
-#card3d .card-bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+  border-radius:inherit;
   background:
     linear-gradient(148deg,transparent 0 13%,rgba(255,255,255,.28) 13.2% 23%,transparent 23.2% 100%),
     linear-gradient(32deg,transparent 0 29%,rgba(255,248,220,.35) 29.2% 42%,transparent 42.2% 100%),
     linear-gradient(128deg,transparent 0 48%,rgba(255,255,255,.24) 48.2% 60%,transparent 60.2% 100%),
     linear-gradient(55deg,transparent 0 72%,rgba(255,255,255,.22) 72.2% 84%,transparent 84.2% 100%),
-    linear-gradient(135deg,#f0d797 0%,#d4a849 52%,#f4dfad 100%)!important;
-}
-#card3d .card-content{display:block!important;padding:0!important}
-#card3d .card-top{
-  position:absolute!important;left:9%!important;right:9%!important;top:11%!important;
-  display:flex!important;justify-content:space-between!important;align-items:flex-start!important;
-  transform:translateZ(16px)!important;
-}
-#card3d .card-brand span{color:#343044!important;text-shadow:none!important}
-#card3d .card-brand small{color:#55506a!important}
-#card3d .card-brand-right span{color:#e51f3a!important;text-shadow:0 1px 1px rgba(75,25,20,.16)!important}
-#card3d .card-brand-right small{color:#9e2636!important}
-#card3d .card-mid{
-  position:absolute!important;left:9%!important;right:9%!important;top:40%!important;
-  display:flex!important;justify-content:space-between!important;align-items:center!important;
-  gap:0!important;transform:translateZ(18px)!important;
-}
-#card3d .chip{
-  width:3.7em!important;height:2.8em!important;flex:0 0 auto!important;
-  border:1px solid rgba(79,59,32,.65)!important;border-radius:.48em!important;
-  background:
-    linear-gradient(90deg,transparent 31%,rgba(83,61,34,.5) 31.8% 33%,transparent 33.8% 66%,rgba(83,61,34,.5) 66.8% 68%,transparent 68.8%),
-    linear-gradient(0deg,transparent 24%,rgba(83,61,34,.5) 24.8% 26%,transparent 26.8% 74%,rgba(83,61,34,.5) 74.8% 76%,transparent 76.8%),
-    linear-gradient(135deg,#e8c987,#c99b4e 52%,#f0d9a4)!important;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.36),0 2px 5px rgba(74,52,19,.18)!important;
-}
-#card3d .chip::before,#card3d .chip::after{
-  background:rgba(86,64,35,.58)!important;
-}
-#card3d .contactless{
-  width:1.9em!important;height:1.9em!important;
-  color:#343044!important;filter:none!important;
-}
-#card3d .card-number{
-  position:absolute!important;left:9%!important;right:9%!important;bottom:27%!important;
-  color:#353044!important;text-shadow:none!important;
-  font-size:1.15em!important;letter-spacing:.13em!important;
-  transform:translateZ(17px)!important;
-}
-#card3d .card-bot{
-  position:absolute!important;left:9%!important;right:9%!important;bottom:9%!important;
-  display:flex!important;justify-content:space-between!important;align-items:flex-end!important;
-  gap:.6em!important;transform:translateZ(18px)!important;
-}
-#card3d .card-bot small{color:#5b5260!important}
-#card3d .card-bot b{color:#302d3d!important}
-#card3d .card-mark{
-  color:#4a3b25!important;border-color:rgba(88,65,32,.45)!important;
-  background:rgba(255,255,255,.2)!important;
-}
-@media(max-width:480px){
-  #card3d .card-top{top:10%!important}
-  #card3d .card-mid{top:39%!important}
-  #card3d .card-number{bottom:26%!important;font-size:1.02em!important}
-  #card3d .card-bot{bottom:8%!important}
-}
-
-
-
-/* Premium gold facets + restrained metallic shine + gentle floating motion */
-.card-float{
-  animation:premiumCardFloat 5.8s ease-in-out infinite!important;
-  transform-style:preserve-3d!important;
-  will-change:transform;
-}
-@keyframes premiumCardFloat{
-  0%,100%{transform:translate3d(0,0,0)}
-  50%{transform:translate3d(0,-10px,0)}
-}
-#card3d .card-bg{
-  isolation:isolate!important;
-  background:
-    radial-gradient(110% 130% at 8% 4%,rgba(255,250,226,.9),transparent 42%),
-    radial-gradient(90% 110% at 92% 100%,rgba(146,94,24,.22),transparent 54%),
-    linear-gradient(122deg,#f7e8bd 0%,#e9cd8d 25%,#d4aa58 52%,#f4dfaa 78%,#c89943 100%)!important;
+    radial-gradient(110% 130% at 8% 4%,rgba(255,250,226,.72),transparent 42%),
+    linear-gradient(135deg,#f0d797 0%,#d4a849 52%,#f4dfad 100%);
 }
 #card3d .card-bg::before{
-  content:""!important;
-  display:block!important;
-  position:absolute!important;inset:0!important;
-  opacity:.72!important;
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity:.72;
+  pointer-events:none;
   background:
     linear-gradient(148deg,transparent 0 18%,rgba(255,255,255,.27) 18.15% 18.5%,transparent 18.7% 100%),
     linear-gradient(32deg,transparent 0 34%,rgba(128,88,31,.13) 34.15% 34.45%,transparent 34.65% 100%),
     linear-gradient(112deg,transparent 0 58%,rgba(255,255,255,.25) 58.15% 58.45%,transparent 58.65% 100%),
-    linear-gradient(158deg,transparent 0 77%,rgba(117,78,27,.12) 77.15% 77.45%,transparent 77.65% 100%),
-    conic-gradient(from 215deg at 24% 24%,rgba(255,255,255,.3),transparent 18%,rgba(159,111,40,.1) 31%,transparent 47%,rgba(255,255,255,.2) 62%,transparent 78%),
-    linear-gradient(135deg,rgba(255,255,255,.1),rgba(139,91,25,.08))!important;
-  clip-path:polygon(0 0,100% 0,100% 100%,0 100%)!important;
-  pointer-events:none!important;
+    linear-gradient(158deg,transparent 0 77%,rgba(117,78,27,.12) 77.15% 77.45%,transparent 77.65% 100%);
 }
-#card3d .card-bg::after{
-  content:""!important;
-  display:block!important;
-  position:absolute!important;
-  inset:-35% -65%!important;
-  z-index:2!important;
-  pointer-events:none!important;
-  background:linear-gradient(108deg,transparent 38%,rgba(255,255,255,0) 43%,rgba(255,255,255,.48) 49%,rgba(255,246,215,.23) 52%,rgba(255,255,255,0) 59%,transparent 64%)!important;
-  transform:translateX(-70%) rotate(0deg)!important;
-  animation:metallicCardShine 5.2s ease-in-out infinite!important;
-  mix-blend-mode:screen!important;
+#card3d .card-wm,
+#card3d .card-sheen,
+#card3d .card-glare{display:none}
+#card3d .card-content{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  display:block;
+  padding:0;
+  transform-style:preserve-3d;
 }
-@keyframes metallicCardShine{
-  0%,12%{transform:translateX(-72%)}
-  72%,100%{transform:translateX(72%)}
+#card3d .card-top{
+  position:absolute;
+  left:9%;
+  right:9%;
+  top:11%;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  transform:translateZ(16px);
 }
-#card3d .card-face{
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.88),
-    inset 0 -1px 0 rgba(128,85,26,.3),
-    inset 0 0 28px rgba(255,248,220,.22),
-    0 18px 30px -17px rgba(0,0,0,.78)!important;
+#card3d .card-brand span{color:#343044;text-shadow:none}
+#card3d .card-brand small{color:#55506a}
+#card3d .card-brand-right{text-align:right}
+#card3d .card-brand-right span{
+  color:#e51f3a;
+  font-size:2em;
+  letter-spacing:-.06em;
+  text-shadow:0 1px 1px rgba(75,25,20,.16);
 }
-#card3d .card-layer{filter:drop-shadow(0 1px 1px rgba(255,255,255,.16))}
+#card3d .card-brand-right small{color:#9e2636}
+#card3d .card-mid{
+  position:absolute;
+  left:9%;
+  right:9%;
+  top:40%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:0;
+  transform:translateZ(18px);
+}
+#card3d .chip{
+  width:3.7em;
+  height:2.8em;
+  flex:0 0 auto;
+  border:1px solid rgba(79,59,32,.65);
+  border-radius:.48em;
+  background:
+    linear-gradient(90deg,transparent 31%,rgba(83,61,34,.5) 31.8% 33%,transparent 33.8% 66%,rgba(83,61,34,.5) 66.8% 68%,transparent 68.8%),
+    linear-gradient(0deg,transparent 24%,rgba(83,61,34,.5) 24.8% 26%,transparent 26.8% 74%,rgba(83,61,34,.5) 74.8% 76%,transparent 76.8%),
+    linear-gradient(135deg,#e8c987,#c99b4e 52%,#f0d9a4);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.36),0 2px 5px rgba(74,52,19,.18);
+}
+#card3d .chip::before,
+#card3d .chip::after{background:rgba(86,64,35,.58)}
+#card3d .contactless{width:1.9em;height:1.9em;color:#343044;filter:none}
+#card3d .card-number{
+  position:absolute;
+  left:9%;
+  right:9%;
+  bottom:27%;
+  color:#353044;
+  font-size:1.15em;
+  letter-spacing:.13em;
+  text-shadow:0 1px rgba(255,255,255,.45);
+  transform:translateZ(17px);
+  white-space:nowrap;
+}
+#card3d .card-bot{
+  position:absolute;
+  left:9%;
+  right:9%;
+  bottom:9%;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:.6em;
+  transform:translateZ(18px);
+}
+#card3d .card-bot small{color:#5b5260}
+#card3d .card-bot b{color:#302d3d}
+#card3d .card-expiry{justify-content:flex-start;align-items:flex-end}
+#card3d .card-mark{
+  color:#4a3b25;
+  border-color:rgba(88,65,32,.45);
+  background:rgba(255,255,255,.2);
+}
+#card3d .card-face::after{
+  content:"";
+  position:absolute;
+  inset:-35% -70%;
+  z-index:10;
+  display:block;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(108deg,transparent 38%,rgba(255,255,255,.1) 44%,rgba(255,255,255,.88) 49.5%,rgba(255,239,196,.48) 53%,rgba(255,255,255,.06) 61%,transparent 68%);
+  transform:translate3d(-110%,0,0) skewX(-14deg);
+  opacity:0;
+  mix-blend-mode:screen;
+  animation:cardMetalShine 4.6s ease-in-out .5s infinite;
+}
+@keyframes cardMetalShine{
+  0%,12%{transform:translate3d(-110%,0,0) skewX(-14deg);opacity:0}
+  26%{opacity:1}
+  72%,100%{transform:translate3d(110%,0,0) skewX(-14deg);opacity:0}
+}
+.card-shadow{
+  animation:cardShadowPulse 5.8s ease-in-out infinite;
+  filter:blur(7px);
+  opacity:.55;
+}
+@keyframes cardShadowPulse{
+  0%,100%{transform:scale(1);opacity:.55}
+  50%{transform:scale(.88);opacity:.32}
+}
+@media(max-width:480px){
+  #card3d .card-top{top:10%}
+  #card3d .card-mid{top:39%}
+  #card3d .card-number{bottom:26%;font-size:1.02em;letter-spacing:.08em}
+  #card3d .card-bot{bottom:8%}
+  #card3d .card-content{padding:0}
+}
 @media(prefers-reduced-motion:reduce){
-  .card-float{animation:none!important}
-  #card3d .card-bg::after{animation:none!important;opacity:.22}
-}
-
-
-
-/* HARD FIX: force the float and shine layers to render above prior legacy overrides */
-#cardScene .card-enter{
-  animation:cardSoftEnter .9s cubic-bezier(.2,.75,.25,1) .12s both!important;
-  transform:none!important;
-}
-#cardScene .card-float{
-  display:block!important;
-  animation:ffCardFloat 4.8s ease-in-out infinite!important;
-  transform-style:preserve-3d!important;
-  will-change:transform;
-}
-@keyframes ffCardFloat{
-  0%,100%{transform:translate3d(0,0,0)!important}
-  50%{transform:translate3d(0,-13px,0)!important}
-}
-#card3d .card-face{
-  overflow:hidden!important;
-  position:absolute!important;
-  isolation:isolate!important;
-}
-#card3d .card-bg{
-  display:block!important;
-  position:absolute!important;
-  inset:0!important;
-  overflow:hidden!important;
-  isolation:isolate!important;
-}
-#card3d .card-bg::after{
-  content:""!important;
-  display:block!important;
-  visibility:visible!important;
-  position:absolute!important;
-  inset:-30% -65%!important;
-  z-index:20!important;
-  pointer-events:none!important;
-  opacity:1!important;
-  background:linear-gradient(108deg,transparent 35%,rgba(255,255,255,.03) 42%,rgba(255,255,255,.78) 49%,rgba(255,246,215,.38) 52%,rgba(255,255,255,.02) 59%,transparent 66%)!important;
-  transform:translate3d(-75%,0,0) skewX(-12deg)!important;
-  animation:ffCardMetalShine 3.8s ease-in-out infinite!important;
-  mix-blend-mode:screen!important;
-}
-@keyframes ffCardMetalShine{
-  0%,8%{transform:translate3d(-78%,0,0) skewX(-12deg);opacity:0}
-  18%{opacity:1}
-  68%,100%{transform:translate3d(78%,0,0) skewX(-12deg);opacity:0}
-}
-
-
-
-/* FINAL INTERACTION FIX: float belongs to wrapper; tilt belongs to card */
-#cardScene{perspective:1100px!important;perspective-origin:50% 45%!important}
-#cardScene .card-enter{transform:none!important;animation:none!important}
-#cardScene .card-float{
-  display:block!important;
-  animation:ffIndependentFloat 5.6s ease-in-out infinite!important;
-  transform-style:preserve-3d!important;
-  will-change:transform!important;
-}
-@keyframes ffIndependentFloat{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-11px)}
-}
-#cardScene #card3d.card-rot{
-  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
-  transform-style:preserve-3d!important;
-  transition:none!important;
-  will-change:transform!important;
-  touch-action:none!important;
-}
-#cardScene #card3d .card-layer{display:block!important;transform:translateZ(-2px)!important}
-#cardScene #card3d .card-layer.l2{transform:translateZ(-4px)!important}
-#cardScene #card3d .card-layer.l3{transform:translateZ(-6px)!important}
-#cardScene #card3d .card-face{
-  transform:translateZ(2px)!important;
-  transform-style:preserve-3d!important;
-  overflow:hidden!important;
-}
-#cardScene #card3d .card-bg{
-  position:absolute!important;inset:0!important;overflow:hidden!important;
-}
-#cardScene #card3d .card-bg::after{
-  content:""!important;display:block!important;visibility:visible!important;
-  position:absolute!important;inset:-30% -65%!important;z-index:50!important;
-  pointer-events:none!important;opacity:1!important;
-  background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.06) 44%,rgba(255,255,255,.82) 50%,rgba(255,245,215,.4) 53%,rgba(255,255,255,.04) 60%,transparent 66%)!important;
-  transform:translateX(-85%) skewX(-14deg);
-  animation:ffVisibleShine 4.2s ease-in-out infinite!important;
-  mix-blend-mode:screen!important;
-}
-@keyframes ffVisibleShine{
-  0%,10%{transform:translateX(-85%) skewX(-14deg);opacity:0}
-  22%{opacity:1}
-  72%,100%{transform:translateX(85%) skewX(-14deg);opacity:0}
-}
-
-
-/* Stable card motion: wrapper float, independent sheen, repeatable window-level drag */
-#cardScene .card-float{animation:ffCardFloatFinal 5.2s ease-in-out infinite!important;animation-play-state:running!important;transform-style:preserve-3d!important;will-change:transform}
-@keyframes ffCardFloatFinal{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-10px,0)}}
-#cardScene #card3d .card-sheen{display:block!important;position:absolute!important;inset:-24% -75%!important;z-index:30!important;pointer-events:none!important;opacity:1!important;background:linear-gradient(108deg,transparent 38%,rgba(255,255,255,.08) 44%,rgba(255,255,255,.78) 49.5%,rgba(255,238,190,.38) 53%,rgba(255,255,255,.05) 61%,transparent 68%)!important;transform:translate3d(-95%,0,0) skewX(-13deg)!important;animation:ffCardSheenFinal 4.6s ease-in-out infinite!important;animation-play-state:running!important;mix-blend-mode:screen}
-@keyframes ffCardSheenFinal{0%,12%{transform:translate3d(-95%,0,0) skewX(-13deg);opacity:0}24%{opacity:1}76%,100%{transform:translate3d(95%,0,0) skewX(-13deg);opacity:0}}
-#cardScene #card3d .card-bg::after{content:none!important;display:none!important}
-#cardScene #card3d.card-rot{touch-action:none!important;pointer-events:auto!important}
-@media(prefers-reduced-motion:reduce){#cardScene .card-float,#cardScene #card3d .card-sheen{animation-play-state:running!important}}
-
-
-/* Card motion: one authoritative animation layer, including Android reduced-motion settings */
-#cardScene{perspective:1100px!important;perspective-origin:50% 45%!important}
-#cardScene .card-enter{
-  animation:ffOuterCardFloat 5.4s ease-in-out infinite!important;
-  animation-duration:5.4s!important;animation-delay:0s!important;animation-iteration-count:infinite!important;
-  transform-style:preserve-3d!important;will-change:transform!important;
-}
-#cardScene .card-float{animation:none!important;transform:none!important;transform-style:preserve-3d!important}
-@keyframes ffOuterCardFloat{
-  0%,100%{transform:translate3d(0,0,0)}
-  50%{transform:translate3d(0,-13px,0)}
-}
-#cardScene #card3d.card-rot{
-  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
-  transform-style:preserve-3d!important;touch-action:none!important;pointer-events:auto!important;
-  transition:none!important;will-change:transform!important;
-}
-#cardScene #card3d .card-face{
-  position:absolute!important;overflow:hidden!important;transform-style:preserve-3d!important;
-}
-#cardScene #card3d .card-face::after{
-  content:""!important;display:block!important;position:absolute!important;
-  inset:-35% -70%!important;z-index:100!important;pointer-events:none!important;
-  border-radius:inherit!important;opacity:0!important;
-  background:linear-gradient(108deg,transparent 38%,rgba(255,255,255,.12) 44%,rgba(255,255,255,.88) 49.5%,rgba(255,239,196,.52) 53%,rgba(255,255,255,.08) 61%,transparent 68%)!important;
-  transform:translate3d(-100%,0,30px) skewX(-14deg)!important;
-  animation:ffFrontFaceShine 4.4s ease-in-out .7s infinite!important;
-  animation-duration:4.4s!important;animation-delay:.7s!important;animation-iteration-count:infinite!important;
-  mix-blend-mode:screen!important;
-}
-@keyframes ffFrontFaceShine{
-  0%,12%{transform:translate3d(-100%,0,30px) skewX(-14deg);opacity:0}
-  25%{transform:translate3d(-35%,0,30px) skewX(-14deg);opacity:1}
-  72%,100%{transform:translate3d(100%,0,30px) skewX(-14deg);opacity:0}
-}
-/* Override OS/browser reduced-motion blanket rules for this requested card effect only */
-@media(prefers-reduced-motion:reduce){
-  #cardScene .card-enter{animation-name:ffOuterCardFloat!important;animation-duration:5.4s!important;animation-delay:0s!important;animation-iteration-count:infinite!important}
-  #cardScene #card3d .card-face::after{animation-name:ffFrontFaceShine!important;animation-duration:4.4s!important;animation-delay:.7s!important;animation-iteration-count:infinite!important}
+  /* Keep a very subtle card movement while honoring the device preference. */
+  #cardScene .card-float{animation-duration:9s}
+  #cardScene #card3d .card-face::after{animation-duration:8s;opacity:.55}
+  #cardScene .card-shadow{animation-duration:9s}
 }
 
 </style>
