@@ -1205,6 +1205,16 @@ select.input option { background: #0d1330; }
   72%,100%{transform:translateX(85%) skewX(-14deg);opacity:0}
 }
 
+
+/* Stable card motion: wrapper float, independent sheen, repeatable window-level drag */
+#cardScene .card-float{animation:ffCardFloatFinal 5.2s ease-in-out infinite!important;animation-play-state:running!important;transform-style:preserve-3d!important;will-change:transform}
+@keyframes ffCardFloatFinal{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-10px,0)}}
+#cardScene #card3d .card-sheen{display:block!important;position:absolute!important;inset:-24% -75%!important;z-index:30!important;pointer-events:none!important;opacity:1!important;background:linear-gradient(108deg,transparent 38%,rgba(255,255,255,.08) 44%,rgba(255,255,255,.78) 49.5%,rgba(255,238,190,.38) 53%,rgba(255,255,255,.05) 61%,transparent 68%)!important;transform:translate3d(-95%,0,0) skewX(-13deg)!important;animation:ffCardSheenFinal 4.6s ease-in-out infinite!important;animation-play-state:running!important;mix-blend-mode:screen}
+@keyframes ffCardSheenFinal{0%,12%{transform:translate3d(-95%,0,0) skewX(-13deg);opacity:0}24%{opacity:1}76%,100%{transform:translate3d(95%,0,0) skewX(-13deg);opacity:0}}
+#cardScene #card3d .card-bg::after{content:none!important;display:none!important}
+#cardScene #card3d.card-rot{touch-action:none!important;pointer-events:auto!important}
+@media(prefers-reduced-motion:reduce){#cardScene .card-float,#cardScene #card3d .card-sheen{animation-play-state:running!important}}
+
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
@@ -1784,71 +1794,49 @@ document.documentElement.classList.add('js');
   function initCard() {
     const scene = document.getElementById('cardScene');
     const card = document.getElementById('card3d');
-    if (!scene || !card) return;
-
+    if (!scene || !card || card.dataset.dragReady === '1') return;
+    card.dataset.dragReady = '1';
     const MAX = 13;
     let rx = 0, ry = 0, targetX = 0, targetY = 0;
-    let raf = 0, dragging = false, activePointer = null, visible = true;
+    let raf = 0, activePointer = null, visible = true;
     const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
-
+    function schedule() { if (!raf && visible) raf = requestAnimationFrame(paint); }
     function paint() {
-      raf = 0;
-      rx += (targetX - rx) * 0.22;
-      ry += (targetY - ry) * 0.22;
-      card.style.setProperty('--rx', rx.toFixed(2) + 'deg');
-      card.style.setProperty('--ry', ry.toFixed(2) + 'deg');
-      const moving = Math.abs(targetX-rx) > 0.03 || Math.abs(targetY-ry) > 0.03;
-      if (moving) schedule();
+      raf = 0; rx += (targetX-rx)*0.24; ry += (targetY-ry)*0.24;
+      card.style.setProperty('--rx', rx.toFixed(2)+'deg'); card.style.setProperty('--ry', ry.toFixed(2)+'deg');
+      if (Math.abs(targetX-rx)>0.035 || Math.abs(targetY-ry)>0.035) schedule();
     }
-    function schedule() {
-      if (!raf && visible) raf = requestAnimationFrame(paint);
+    function aim(x,y) {
+      const r=card.getBoundingClientRect(); if(!r.width||!r.height)return;
+      const nx=clamp((x-r.left-r.width/2)/(r.width/2),-1,1);
+      const ny=clamp((y-r.top-r.height/2)/(r.height/2),-1,1);
+      targetY=nx*MAX; targetX=-ny*MAX; schedule();
     }
-    function aimFromPoint(x, y) {
-      const r = card.getBoundingClientRect();
-      if (!r.width || !r.height) return;
-      const nx = clamp((x - (r.left + r.width/2)) / (r.width/2), -1, 1);
-      const ny = clamp((y - (r.top + r.height/2)) / (r.height/2), -1, 1);
-      targetY = nx * MAX;
-      targetX = -ny * MAX;
-      schedule();
+    function finish(e) {
+      if(activePointer===null || (e && e.pointerId!==activePointer))return;
+      activePointer=null; targetX=0; targetY=0; schedule();
     }
-    function reset() { targetX = 0; targetY = 0; schedule(); }
-
-    card.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      dragging = true;
-      activePointer = e.pointerId;
-      try { card.setPointerCapture(e.pointerId); } catch {}
-      aimFromPoint(e.clientX, e.clientY);
-      e.preventDefault();
+    card.addEventListener('pointerdown',(e)=>{
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      if(activePointer!==null)return;
+      activePointer=e.pointerId; aim(e.clientX,e.clientY);
+      if(e.cancelable)e.preventDefault();
+    },{passive:false});
+    window.addEventListener('pointermove',(e)=>{
+      if(activePointer!==null&&e.pointerId===activePointer){aim(e.clientX,e.clientY);if(e.cancelable)e.preventDefault();}
+      else if(e.pointerType==='mouse'&&activePointer===null&&card.matches(':hover'))aim(e.clientX,e.clientY);
+    },{passive:false});
+    window.addEventListener('pointerup',finish);
+    window.addEventListener('pointercancel',finish);
+    window.addEventListener('blur',()=>finish());
+    document.addEventListener('visibilitychange',()=>{
+      visible=!document.hidden;
+      if(visible)schedule();else if(raf){cancelAnimationFrame(raf);raf=0;}
     });
-    card.addEventListener('pointermove', (e) => {
-      if (dragging && e.pointerId === activePointer) {
-        aimFromPoint(e.clientX, e.clientY);
-        e.preventDefault();
-      } else if (e.pointerType === 'mouse' && !dragging) {
-        aimFromPoint(e.clientX, e.clientY);
-      }
-    });
-    function finishDrag(e) {
-      if (!dragging || (e && e.pointerId !== activePointer)) return;
-      dragging = false;
-      activePointer = null;
-      reset();
-    }
-    card.addEventListener('pointerup', finishDrag);
-    card.addEventListener('pointercancel', finishDrag);
-    card.addEventListener('lostpointercapture', finishDrag);
-    card.addEventListener('pointerleave', (e) => {
-      if (e.pointerType === 'mouse' && !dragging) reset();
-    });
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(([entry]) => {
-        visible = entry.isIntersecting;
-        if (visible) schedule();
-        else if (raf) { cancelAnimationFrame(raf); raf = 0; }
-      }).observe(scene);
-    }
+    if('IntersectionObserver'in window)new IntersectionObserver(([entry])=>{
+      visible=entry.isIntersecting&&!document.hidden;
+      if(visible)schedule();else if(raf){cancelAnimationFrame(raf);raf=0;}
+    }).observe(scene);
   }
 
   /* =================== packages =================== */
