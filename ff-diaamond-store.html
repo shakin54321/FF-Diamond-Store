@@ -1246,8 +1246,8 @@ document.documentElement.classList.add('js');
     const buy = el('button', { type: 'button', class: 'btn btn-primary btn-block', disabled: off, onclick: () => openConfirm(p, q()) }, off ? 'Unavailable' : 'Buy Now');
 
     const tier = Math.min(4, id);
-    const tierLabels = ['', 'STARTER DEAL', 'POPULAR PICK', 'FEATURED PICK', 'ULTIMATE PACK'];
-    const tierNotes = ['', 'Easy entry package', 'Great everyday value', 'Premium diamond bundle', 'Maximum diamond bundle'];
+    const tierLabels = ['', 'STARTER DEAL', 'POPULAR PICK', 'TOP FEATURED', 'ULTIMATE PACK'];
+    const tierNotes = ['', 'Easy entry package', 'Great everyday value', 'Spotlight package • 80,000 Diamonds', 'Maximum diamond bundle'];
     const card = el('article', { class: `pkg tier-${tier} reveal${off ? ' is-off' : ''}`, 'aria-label': `${fmt.int(p.diamonds)} diamonds` },
       el('span', { class: 'pkg-ribbon' }, tierLabels[tier]),
       el('div', { class: 'pkg-top' },
@@ -1280,7 +1280,8 @@ document.documentElement.classList.add('js');
         grid.replaceChildren(el('div', { class: 'state-box' }, 'Packages are being updated. Please check back soon.'));
         return;
       }
-      grid.replaceChildren(...cfg.packages.map(pkgCard));
+      const orderedPackages = cfg.packages.slice().sort((a, b) => Number(b.diamonds === 80000) - Number(a.diamonds === 80000));
+      grid.replaceChildren(...orderedPackages.map(pkgCard));
       reveal(grid);
     } catch (err) {
       grid.replaceChildren(el('div', { class: 'state-box', role: 'alert' },
