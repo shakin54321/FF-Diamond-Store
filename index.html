@@ -669,13 +669,10 @@ select.input option { background: #0d1330; }
 
 /* Final card correction: level, stable, front-facing gold card */
 .card-scene{perspective:none!important;transform:none!important}
-.card-enter,.card-float,.card-rot{
-  animation:none!important;
-  transform:none!important;
-  transform-style:flat!important;
-}
-.card-rot{will-change:auto!important}
-.card-layer{transform:none!important;display:none!important}
+.card-enter{animation:none!important;transform:none!important;transform-style:preserve-3d!important}
+.card-float{animation:float 7s ease-in-out infinite!important;transform-style:preserve-3d!important;will-change:transform}
+.card-rot{transform-style:preserve-3d!important;will-change:transform}
+.card-layer{display:block!important}
 .card-face{
   transform:none!important;
   overflow:hidden;
@@ -1158,6 +1155,54 @@ select.input option { background: #0d1330; }
   0%,8%{transform:translate3d(-78%,0,0) skewX(-12deg);opacity:0}
   18%{opacity:1}
   68%,100%{transform:translate3d(78%,0,0) skewX(-12deg);opacity:0}
+}
+
+
+
+/* FINAL INTERACTION FIX: float belongs to wrapper; tilt belongs to card */
+#cardScene{perspective:1100px!important;perspective-origin:50% 45%!important}
+#cardScene .card-enter{transform:none!important;animation:none!important}
+#cardScene .card-float{
+  display:block!important;
+  animation:ffIndependentFloat 5.6s ease-in-out infinite!important;
+  transform-style:preserve-3d!important;
+  will-change:transform!important;
+}
+@keyframes ffIndependentFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-11px)}
+}
+#cardScene #card3d.card-rot{
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
+  transform-style:preserve-3d!important;
+  transition:none!important;
+  will-change:transform!important;
+  touch-action:none!important;
+}
+#cardScene #card3d .card-layer{display:block!important;transform:translateZ(-2px)!important}
+#cardScene #card3d .card-layer.l2{transform:translateZ(-4px)!important}
+#cardScene #card3d .card-layer.l3{transform:translateZ(-6px)!important}
+#cardScene #card3d .card-face{
+  transform:translateZ(2px)!important;
+  transform-style:preserve-3d!important;
+  overflow:hidden!important;
+}
+#cardScene #card3d .card-bg{
+  position:absolute!important;inset:0!important;overflow:hidden!important;
+}
+#cardScene #card3d .card-bg::after{
+  content:""!important;display:block!important;visibility:visible!important;
+  position:absolute!important;inset:-30% -65%!important;z-index:50!important;
+  pointer-events:none!important;opacity:1!important;
+  background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.06) 44%,rgba(255,255,255,.82) 50%,rgba(255,245,215,.4) 53%,rgba(255,255,255,.04) 60%,transparent 66%)!important;
+  transform:translateX(-85%) skewX(-14deg);
+  animation:ffVisibleShine 4.2s ease-in-out infinite!important;
+  mix-blend-mode:screen!important;
+}
+@keyframes ffVisibleShine{
+  0%,10%{transform:translateX(-85%) skewX(-14deg);opacity:0}
+  22%{opacity:1}
+  72%,100%{transform:translateX(85%) skewX(-14deg);opacity:0}
 }
 
 </style>
