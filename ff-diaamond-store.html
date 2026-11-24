@@ -519,6 +519,56 @@ select.input option { background: #0d1330; }
   .pkg.tier-3 { transform: translateY(-7px) scale(1.012); }
 }
 
+
+/* Lightweight premium package color refresh: no looping animations */
+.pkg.tier-3 {
+  position: relative;
+  z-index: 3;
+  transform: translateY(-10px) scale(1.025);
+  border: 1.5px solid rgba(255, 205, 92, .92);
+  background:
+    radial-gradient(120% 85% at 50% 0%, rgba(255, 190, 55, .27), transparent 62%),
+    linear-gradient(155deg, rgba(132, 83, 18, .3), rgba(24, 22, 30, .96) 75%);
+  box-shadow: 0 0 0 1px rgba(255,205,92,.16), 0 0 22px rgba(255,184,55,.25), inset 0 0 22px rgba(255,190,70,.08);
+  animation: none !important;
+}
+.pkg.tier-3 .pkg-ribbon {
+  color: #ffe2a0;
+  border-color: rgba(255,205,92,.75);
+  background: rgba(145,94,20,.28);
+  box-shadow: 0 0 12px rgba(255,190,65,.18);
+}
+.pkg.tier-3 .pkg-d,
+.pkg.tier-3 .pkg-price .cur,
+.pkg.tier-3 .pkg-price .amt { color: #ffe5ad; text-shadow: 0 0 12px rgba(255,195,75,.22); }
+.pkg.tier-3 .pkg-gem { box-shadow: 0 0 16px rgba(255,190,65,.24); }
+
+.pkg.tier-4 {
+  position: relative;
+  border: 1.5px solid rgba(255, 126, 194, .82);
+  background:
+    radial-gradient(120% 85% at 100% 0%, rgba(255, 105, 180, .25), transparent 62%),
+    linear-gradient(155deg, rgba(125, 42, 91, .28), rgba(25, 20, 34, .96) 76%);
+  box-shadow: 0 0 0 1px rgba(255,126,194,.14), 0 0 20px rgba(255,85,170,.2), inset 0 0 22px rgba(255,110,185,.07);
+}
+.pkg.tier-4 .pkg-ribbon {
+  color: #ffd2e9;
+  border-color: rgba(255,145,205,.72);
+  background: rgba(150,48,105,.25);
+  box-shadow: 0 0 11px rgba(255,100,180,.16);
+}
+.pkg.tier-4 .pkg-d,
+.pkg.tier-4 .pkg-price .cur,
+.pkg.tier-4 .pkg-price .amt { color: #ffd5eb; text-shadow: 0 0 12px rgba(255,115,190,.2); }
+.pkg.tier-4 .pkg-gem { background: linear-gradient(145deg, rgba(255,120,190,.34), rgba(130,45,100,.16)); box-shadow: 0 0 16px rgba(255,100,180,.22); }
+
+@media (max-width: 559px) {
+  .pkg.tier-3 { transform: translateY(-6px) scale(1.01); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pkg.tier-3, .pkg.tier-4 { animation: none !important; transition: none !important; }
+}
+
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
