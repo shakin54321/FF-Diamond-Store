@@ -1215,6 +1215,37 @@ select.input option { background: #0d1330; }
 #cardScene #card3d.card-rot{touch-action:none!important;pointer-events:auto!important}
 @media(prefers-reduced-motion:reduce){#cardScene .card-float,#cardScene #card3d .card-sheen{animation-play-state:running!important}}
 
+
+/* Visible motion fix: animate the actual outer card wrapper and overlay the front face */
+#cardScene .card-enter{
+  animation:ffOuterCardFloat 5.4s ease-in-out infinite!important;
+  animation-delay:0s!important;
+  animation-fill-mode:both!important;
+  transform-style:preserve-3d!important;
+  will-change:transform;
+}
+#cardScene .card-float{animation:none!important;transform:none!important;transform-style:preserve-3d!important}
+@keyframes ffOuterCardFloat{
+  0%,100%{transform:translate3d(0,0,0)}
+  50%{transform:translate3d(0,-13px,0)}
+}
+#cardScene #card3d .card-face{position:absolute!important;overflow:hidden!important}
+#cardScene #card3d .card-face::after{
+  content:""!important;display:block!important;position:absolute!important;
+  inset:-35% -70%!important;z-index:100!important;pointer-events:none!important;
+  border-radius:inherit!important;opacity:0;
+  background:linear-gradient(108deg,transparent 38%,rgba(255,255,255,.12) 44%,rgba(255,255,255,.88) 49.5%,rgba(255,239,196,.52) 53%,rgba(255,255,255,.08) 61%,transparent 68%)!important;
+  transform:translate3d(-100%,0,0) skewX(-14deg)!important;
+  animation:ffFrontFaceShine 4.4s ease-in-out infinite!important;
+  animation-delay:.7s!important;mix-blend-mode:screen!important;
+}
+@keyframes ffFrontFaceShine{
+  0%,12%{transform:translate3d(-100%,0,0) skewX(-14deg);opacity:0}
+  25%{opacity:1}
+  72%,100%{transform:translate3d(100%,0,0) skewX(-14deg);opacity:0}
+}
+#cardScene #card3d{touch-action:none!important;pointer-events:auto!important}
+
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
