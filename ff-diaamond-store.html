@@ -239,6 +239,34 @@ main { animation: pageIn .5s cubic-bezier(.2, .7, .2, 1) both; }
 @media (max-width: 559px) { .pkg { flex-basis: 100%; } .pkg.tier-4 { transform: none; } }
 .pkg::before { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .3s; pointer-events: none; background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(91, 157, 255, .2), transparent 62%); }
 @media (hover: hover) { .pkg:hover { transform: translateY(-5px); border-color: rgba(120, 160, 255, .45); } .pkg:hover::before { opacity: 1; } }
+/* Tap feedback for each package: a short premium light sweep */
+.pkg { -webkit-tap-highlight-color: transparent; }
+.pkg.pkg-clicking::after {
+  content: "";
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(112deg, transparent 18%, rgba(255,255,255,.04) 36%, rgba(255,255,255,.34) 50%, rgba(255,255,255,.04) 64%, transparent 82%);
+  transform: translateX(-115%);
+  animation: packageTapSweep .78s cubic-bezier(.2,.65,.25,1) both;
+}
+.pkg.pkg-selected {
+  outline: 1.5px solid rgba(255,255,255,.62);
+  outline-offset: 2px;
+  filter: brightness(1.08);
+}
+@keyframes packageTapSweep {
+  0% { transform: translateX(-115%); opacity: 0; }
+  14% { opacity: 1; }
+  100% { transform: translateX(115%); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pkg.pkg-clicking::after { animation: none; opacity: 0; }
+  .pkg.pkg-selected { filter: none; }
+}
+
 .pkg-top { display: flex; align-items: center; gap: .85rem; }
 .pkg-gem { width: 52px; height: 52px; flex: none; display: grid; place-items: center; border-radius: 16px; background: radial-gradient(circle at 30% 25%, rgba(91, 157, 255, .28), rgba(123, 92, 255, .1)); border: 1px solid var(--line-strong); }
 .pkg-gem img { width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(61, 123, 255, .55)); }
@@ -1584,6 +1612,15 @@ document.documentElement.classList.add('js');
         el('span', { class: 'cur' }, '৳'),
         el('span', { class: 'amt' }, fmt.int(p.price))),
       buy);
+
+    card.addEventListener('click', () => {
+      if (off) return;
+      document.querySelectorAll('.pkg.pkg-selected').forEach((item) => item.classList.remove('pkg-selected'));
+      card.classList.remove('pkg-clicking');
+      card.classList.add('pkg-selected');
+      void card.offsetWidth; // restart the sweep on every tap
+      card.classList.add('pkg-clicking');
+    });
 
     return card;
   }
