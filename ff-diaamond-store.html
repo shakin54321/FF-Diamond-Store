@@ -693,7 +693,7 @@ document.documentElement.classList.add('js');
   };
 
   // [diamonds, price in BDT]
-  const PACKAGES = [[500, 280], [1000, 350], [5000, 750], [10000, 1450], [20000, 2990], [35000, 5750], [50000, 9990]];
+  const PACKAGES = [[8000, 450], [17000, 750], [80000, 1500], [200000, 3000]];
 
   const METHODS = [
     {
@@ -1102,7 +1102,7 @@ document.documentElement.classList.add('js');
   const state = { qty: new Map(), maxQty: 20 };
 
   function skeletons() {
-    grid.replaceChildren(...Array.from({ length: 7 }, () => el('div', { class: 'pkg sk', 'aria-hidden': 'true' })));
+    grid.replaceChildren(...Array.from({ length: 4 }, () => el('div', { class: 'pkg sk', 'aria-hidden': 'true' })));
   }
 
   function pkgCard(p) {
@@ -1215,7 +1215,26 @@ document.documentElement.classList.add('js');
   });
 
   let cardReady = false;
-  window.FFPages.home = () => { if (!cardReady) { cardReady = true; initCard(); } loadPackages(); };
+  let promoStarted = false;
+  function showPackagePromos() {
+    if (promoStarted || reduced) return;
+    promoStarted = true;
+    const promos = [
+      'আজকের Diamond Offer · 8,000 Diamonds — ৳450',
+      '17,000 Diamonds package available · ৳750',
+      'Premium Diamond Pack · 80,000 — ৳1,500',
+      'Mega Diamond Pack · 200,000 — ৳3,000'
+    ];
+    let index = 0;
+    const show = () => {
+      if (document.hidden || !document.querySelector('[data-view="home"]:not([hidden])')) return;
+      toast(promos[index % promos.length], '');
+      index++;
+    };
+    window.setTimeout(show, 4500);
+    window.setInterval(show, 15000);
+  }
+  window.FFPages.home = () => { if (!cardReady) { cardReady = true; initCard(); } loadPackages(); showPackagePromos(); };
 })();
 
 (function () {
