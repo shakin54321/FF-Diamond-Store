@@ -587,9 +587,10 @@ select.input option { background: #0d1330; }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
 
-/* Compact package ETA */
-.pkg-eta{margin:.55rem 0 .75rem;padding:.38rem .55rem;border-radius:9px;background:rgba(49,213,139,.09);color:#7ce8b4;font-size:.72rem;font-weight:700;line-height:1.3;text-align:center}
-.pkg .pkg-eta{display:block}
+/* Package header: ETA aligned to the top-right, beside the featured label */
+.pkg-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.6rem;min-height:34px}
+.pkg-head .pkg-ribbon{flex:none}
+.pkg-head .pkg-eta{display:block;flex:0 1 auto;max-width:52%;margin:0;padding:.28rem 0;background:transparent;border:0;border-radius:0;color:#8af0bd;font-size:.68rem;font-weight:750;line-height:1.35;text-align:right}
 .order-time-note{display:none!important}
 /* Minimal order confirmation */
 .dlg-panel{padding:1.2rem 1.1rem 1.1rem;border-radius:20px}
@@ -1503,14 +1504,15 @@ document.documentElement.classList.add('js');
     const tier = Math.min(4, p.id);
     const tierLabels = ['', 'STARTER DEAL', 'POPULAR PICK', 'TOP FEATURED', 'ULTIMATE PACK'];
     const card = el('article', { class: `pkg tier-${tier} reveal${off ? ' is-off' : ''}`, 'aria-label': `${fmt.int(p.diamonds)} diamonds` },
-      el('span', { class: 'pkg-ribbon' }, tierLabels[tier]),
+      el('div', { class: 'pkg-head' },
+        el('span', { class: 'pkg-ribbon' }, tierLabels[tier]),
+        el('p', { class: 'pkg-eta' }, '৫ মিনিটের মধ্যে অর্ডার সম্পন্ন')),
       el('div', { class: 'pkg-top' },
         el('div', { class: 'pkg-gem' }, icon('gem', { size: 32 })),
         el('div', null, el('b', { class: 'pkg-d' }, fmt.int(p.diamonds)), el('span', null, 'Diamonds'))),
       el('div', { class: 'pkg-price' },
         el('span', { class: 'cur' }, '৳'),
         el('span', { class: 'amt' }, fmt.int(p.price))),
-      el('p', { class: 'pkg-eta' }, '৫ মিনিটের মধ্যে অর্ডার সম্পন্ন'),
       buy);
 
     return card;
