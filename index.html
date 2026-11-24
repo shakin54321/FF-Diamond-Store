@@ -574,6 +574,22 @@ select.input option { background: #0d1330; }
 .pkg .qty, .pkg .calc, .pkg .pkg-tier-note, .pkg .per { display: none !important; }
 .pkg .pkg-price { justify-content: center; gap: .25rem; }
 .pkg .pkg-total { display: none !important; }
+
+/* Full-store cleanup: keep only essential shopping and order information */
+.order-time-note{display:flex;align-items:center;justify-content:center;gap:12px;max-width:620px;margin:0 auto 22px;padding:15px 18px;border:1px solid rgba(49,213,139,.34);border-radius:16px;background:linear-gradient(110deg,rgba(49,213,139,.13),rgba(61,123,255,.08));text-align:left;color:#eafff4}
+.order-time-note strong{display:block;font-size:clamp(.95rem,3vw,1.08rem);line-height:1.35}
+.order-time-note small{display:block;margin-top:4px;color:#a9c9ba;font-size:.78rem;line-height:1.45}
+.order-time-dot{width:10px;height:10px;flex:none;border-radius:50%;background:#31d58b;box-shadow:0 0 0 5px rgba(49,213,139,.12)}
+#how,#faq,.hero .trust,.hero .hero-sub,.hero .eyebrow,.hero .hero-cta .btn-ghost,.pkg-tier-note,.foot-disc{display:none!important}
+.nav-links{gap:.7rem}.nav-in{min-height:56px}
+.section{padding-top:2.2rem;padding-bottom:2.4rem}
+.sec-head{margin-bottom:1.25rem}.sec-head>p:not(.eyebrow){margin-top:.55rem}
+.pkg-grid{gap:.8rem}.pkg{padding:1rem;border-radius:18px}
+.footer{padding-top:1.2rem;padding-bottom:1.2rem}
+.foot-safe{font-size:.82rem}
+@media(max-width:560px){.hero{padding-top:1.5rem;padding-bottom:1.3rem}.card-scene{margin-top:1.1rem}.order-time-note{margin-bottom:16px;padding:13px 14px}.pkg{padding:.9rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
@@ -689,9 +705,9 @@ document.documentElement.classList.add('js');
       <div class="sec-head reveal">
         <p class="eyebrow">Diamond packages</p>
         <h2 id="pk-title">Choose your top-up</h2>
-        <p>Prices are in Bangladeshi Taka (&#2547;). Change the quantity and the total updates instantly.</p>
+        <p>পছন্দের Diamond Package বেছে নিন। সব দাম বাংলাদেশি টাকায়।</p>
       </div>
-      <div class="pkg-grid" id="pkgGrid" aria-live="polite"></div>
+      <div class="order-time-note" role="note"><span class="order-time-dot"></span><span><strong>5 মিনিটের মধ্যে অর্ডার সম্পন্ন হবে!</strong><small>পেমেন্ট যাচাই হওয়ার পর সাধারণত ৫ মিনিটের মধ্যে ডেলিভারির লক্ষ্য</small></span></div><div class="pkg-grid" id="pkgGrid" aria-live="polite"></div>
       </div>
   </section>
 
