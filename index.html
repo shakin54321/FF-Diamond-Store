@@ -714,21 +714,21 @@ select.input option { background: #0d1330; }
 #card3d .card-bg{
   position:absolute;inset:0;z-index:0;overflow:hidden;border-radius:inherit;
   background:
-    radial-gradient(ellipse at 18% 12%,rgba(255,255,255,.72),transparent 32%),
-    radial-gradient(ellipse at 82% 86%,rgba(120,75,18,.17),transparent 42%),
-    repeating-linear-gradient(132deg,transparent 0 17px,rgba(255,255,255,.11) 17.5px 18px,transparent 18.5px 37px),
-    repeating-linear-gradient(42deg,transparent 0 28px,rgba(112,73,23,.085) 28.5px 29px,transparent 29.5px 56px),
-    linear-gradient(148deg,transparent 0 13%,rgba(255,255,255,.27) 13.2% 23%,transparent 23.2% 100%),
-    linear-gradient(32deg,transparent 0 29%,rgba(255,248,220,.3) 29.2% 42%,transparent 42.2% 100%),
-    linear-gradient(128deg,transparent 0 48%,rgba(255,255,255,.2) 48.2% 60%,transparent 60.2% 100%),
-    linear-gradient(135deg,#f0d797 0%,#d4a849 52%,#f4dfad 100%);
+    conic-gradient(from 218deg at 18% 18%,rgba(255,248,222,.9) 0 28deg,rgba(218,174,91,.35) 28deg 66deg,rgba(255,239,195,.82) 66deg 103deg,rgba(183,127,43,.28) 103deg 142deg,transparent 142deg 360deg),
+    conic-gradient(from 24deg at 48% 12%,rgba(183,128,43,.3) 0 34deg,rgba(255,246,218,.88) 34deg 70deg,rgba(213,166,77,.35) 70deg 112deg,rgba(255,239,195,.82) 112deg 151deg,transparent 151deg 360deg),
+    conic-gradient(from 190deg at 78% 24%,rgba(255,246,218,.9) 0 31deg,rgba(198,145,54,.25) 31deg 72deg,rgba(255,239,195,.78) 72deg 110deg,rgba(184,127,40,.32) 110deg 151deg,transparent 151deg 360deg),
+    conic-gradient(from 305deg at 88% 76%,rgba(255,247,220,.88) 0 37deg,rgba(199,145,51,.25) 37deg 79deg,rgba(255,238,190,.75) 79deg 120deg,rgba(177,119,35,.25) 120deg 159deg,transparent 159deg 360deg),
+    conic-gradient(from 135deg at 34% 82%,rgba(255,247,220,.8) 0 34deg,rgba(190,132,39,.25) 34deg 78deg,rgba(255,239,197,.84) 78deg 119deg,rgba(180,122,37,.22) 119deg 157deg,transparent 157deg 360deg),
+    linear-gradient(135deg,#f8e9bd 0%,#e4c276 26%,#c9973e 51%,#f4dfad 73%,#d3a64e 100%);
 }
 #card3d .card-bg::before{
-  content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.42;
   background:
-    radial-gradient(circle at 0 0,transparent 0 24px,rgba(255,255,255,.42) 24.5px 25px,transparent 25.5px 39px,rgba(122,82,28,.22) 39.5px 40px,transparent 40.5px),
-    radial-gradient(circle at 100% 100%,transparent 0 31px,rgba(255,255,255,.38) 31.5px 32px,transparent 32.5px 49px,rgba(122,82,28,.2) 49.5px 50px,transparent 50.5px),
-    repeating-linear-gradient(90deg,rgba(255,255,255,.045) 0 1px,transparent 1px 3px);
+    linear-gradient(148deg,transparent 0 19.8%,rgba(255,255,255,.72) 20%,transparent 20.25%),
+    linear-gradient(34deg,transparent 0 37.8%,rgba(255,255,255,.58) 38%,transparent 38.25%),
+    linear-gradient(128deg,transparent 0 57.8%,rgba(112,73,23,.2) 58%,transparent 58.25%),
+    linear-gradient(8deg,transparent 0 71.8%,rgba(255,255,255,.5) 72%,transparent 72.25%),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px);
 }
 #card3d .card-wm,#card3d .card-sheen,#card3d .card-glare{display:none}
 #card3d .card-content{position:absolute;inset:0;z-index:2;display:block;padding:0;transform-style:preserve-3d}
@@ -764,6 +764,27 @@ select.input option { background: #0d1330; }
 #card3d .card-bot small{color:#5b5260}
 #card3d .card-bot b{color:#302d3d}
 #card3d .card-expiry{justify-content:flex-start;align-items:flex-end}
+#card3d .card-balance{
+  display:flex;flex-direction:column;align-items:flex-end;gap:.18em;
+  padding:0;border:0;background:transparent;color:#302d3d;
+  font:inherit;text-align:right;cursor:pointer;transform:translateZ(19px);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+#card3d .card-balance small{
+  color:#6f552e;font:700 .48em/1.2 var(--font-body);
+  letter-spacing:.055em;white-space:nowrap;margin:0;
+}
+#card3d .card-balance b{
+  color:#302d3d;font:700 .76em/1.1 var(--mono);letter-spacing:.015em;
+  filter:blur(4px);opacity:.72;transition:filter .22s ease,opacity .22s ease;
+  white-space:nowrap;
+}
+#card3d .card-balance.is-revealed b{filter:blur(0);opacity:1}
+#card3d .card-balance:focus-visible{outline:2px solid #8d642b;outline-offset:4px;border-radius:4px}
+@media(max-width:480px){
+  #card3d .card-balance small{font-size:.39em}
+  #card3d .card-balance b{font-size:.68em}
+}
 #card3d .card-mark{color:#4a3b25;border-color:rgba(88,65,32,.45);background:rgba(255,255,255,.24);box-shadow:inset 0 1px rgba(255,255,255,.5),0 2px 5px rgba(80,53,17,.12)}
 #card3d .card-face::after{
   content:"";position:absolute;inset:-35% -70%;z-index:10;display:block;
@@ -875,7 +896,7 @@ document.documentElement.classList.add('js');
                   <div class="card-bot card-expiry">
                     <div><small>EXPIRES</small><b>12/30</b></div>
                     <div class="card-holder"><small>CARD HOLDER</small><b>FREE FIRE PLAYER</b></div>
-                    <span class="card-mark">VIRTUAL</span>
+                    <button class="card-balance" type="button" aria-label="Reveal demo card balance" aria-pressed="false"><small>BALANCE · TAP TO REVEAL</small><b class="balance-value">৳ 25,480.00</b></button>
                   </div>
                 </div>
               </div>
@@ -1366,6 +1387,12 @@ document.documentElement.classList.add('js');
     const scene = document.getElementById('cardScene');
     const card = document.getElementById('card3d');
     if (!scene || !card || card.dataset.dragReady === '1') return;
+    const balance = card.querySelector('.card-balance');
+    if (balance) balance.addEventListener('click', () => {
+      const revealed = balance.classList.toggle('is-revealed');
+      balance.setAttribute('aria-pressed', String(revealed));
+      balance.setAttribute('aria-label', revealed ? 'Hide demo card balance' : 'Reveal demo card balance');
+    });
     card.dataset.dragReady = '1';
 
     const MAX_TILT = 22;
@@ -1417,6 +1444,7 @@ document.documentElement.classList.add('js');
       schedule();
     }
     card.addEventListener('pointerdown',e=>{
+      if(e.target.closest('.card-balance'))return;
       if(e.pointerType==='mouse'&&e.button!==0)return;
       pointerId=e.pointerId;dragging=true;moved=false;
       velocityX=velocityY=0;lastTime=0;
