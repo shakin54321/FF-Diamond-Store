@@ -596,8 +596,7 @@ document.documentElement.classList.add('js');
         <p>Prices are in Bangladeshi Taka (&#2547;). Change the quantity and the total updates instantly.</p>
       </div>
       <div class="pkg-grid" id="pkgGrid" aria-live="polite"></div>
-      <p class="demo-disclaimer">নিচের জনপ্রিয়তার সংখ্যা ও activity notification ডেমো উদাহরণ—এগুলো প্রকৃত অর্ডার বা বিক্রির দাবি নয়।</p>
-    </div>
+      </div>
   </section>
 
   <section id="how" class="section" aria-labelledby="how-title">
@@ -1155,9 +1154,6 @@ document.documentElement.classList.add('js');
 
     const buy = el('button', { type: 'button', class: 'btn btn-primary btn-block', disabled: off, onclick: () => openConfirm(p, q()) }, off ? 'Unavailable' : 'Buy Now');
 
-    const tier = Math.min(4, id);
-    const demoSold = [0, 1280, 940, 620, 385][tier];
-    const tierLabel = ['','STARTER','POPULAR','ELITE','LEGENDARY'][tier];
     const tier = Math.min(4, id);
     const tierLabels = ['', 'STARTER DEAL', 'POPULAR PICK', 'ELITE VALUE', 'ULTIMATE PACK'];
     const tierNotes = ['', 'Easy entry package', 'Great everyday value', 'For serious players', 'Maximum diamond bundle'];
