@@ -1479,16 +1479,17 @@ document.documentElement.classList.add('js');
     const balance = card.querySelector('.card-balance');
     if (balance) {
       const balanceValue = balance.querySelector('.balance-value');
-      const balanceStart = Date.parse('2026-11-24T00:00:00+06:00');
-      const balanceBase = 25480;
+      let demoBalance = 44000;
       const balanceFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       const updateDemoBalance = () => {
-        const hoursPassed = Math.max(0, Math.floor((Date.now() - balanceStart) / 3600000));
-        if (balanceValue) balanceValue.textContent = '$ ' + balanceFormat.format(balanceBase + (hoursPassed * 1000));
+        if (balanceValue) balanceValue.textContent = '$ ' + balanceFormat.format(demoBalance);
       };
       updateDemoBalance();
-      window.setInterval(updateDemoBalance, 60000);
-      document.addEventListener('visibilitychange', updateDemoBalance);
+      window.setInterval(() => {
+        // Decorative demo animation only: gently decrease, then loop back to $44,000.
+        demoBalance = demoBalance <= 20000 ? 44000 : Math.max(20000, demoBalance - (1 + Math.random() * 8));
+        updateDemoBalance();
+      }, 1000);
       balance.addEventListener('click', () => {
       const revealed = balance.classList.toggle('is-revealed');
       balance.setAttribute('aria-pressed', String(revealed));
