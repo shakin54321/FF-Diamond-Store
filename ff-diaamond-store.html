@@ -827,6 +827,34 @@ select.input option { background: #0d1330; }
  .card-face::after,.card-back::after,.card-bg::after{animation:none!important}
 }
 
+
+/* Front-only card: disable every flip state while keeping 3D tilt and lighting */
+#card3d.is-flipped{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important}
+#card3d .card-back{display:none!important}
+#card3d .card-face{backface-visibility:visible!important;-webkit-backface-visibility:visible!important}
+#card3d .card-face::before{
+  content:"";position:absolute;inset:-25%;z-index:7;pointer-events:none;border-radius:inherit;
+  background:
+    radial-gradient(ellipse at 22% 28%,rgba(255,250,213,.78),transparent 30%),
+    radial-gradient(ellipse at 78% 72%,rgba(255,190,54,.42),transparent 34%),
+    radial-gradient(ellipse at 52% 48%,rgba(255,255,255,.18),transparent 48%);
+  background-size:160% 160%;mix-blend-mode:screen;opacity:.72;
+  animation:innerGoldLighting 6.5s ease-in-out infinite alternate;
+}
+#card3d .card-bg::after{
+  background:
+    radial-gradient(ellipse at 20% 30%,rgba(255,255,225,.58),transparent 35%),
+    radial-gradient(ellipse at 82% 72%,rgba(255,174,34,.38),transparent 38%),
+    linear-gradient(115deg,transparent 20%,rgba(255,255,255,.13) 48%,transparent 70%)!important;
+  background-size:150% 150%,150% 150%,220% 100%!important;
+  animation:innerGoldLighting 7s ease-in-out infinite alternate!important;
+}
+@keyframes innerGoldLighting{
+  0%{background-position:0% 20%,100% 80%,0% 50%;opacity:.42}
+  50%{opacity:.82}
+  100%{background-position:100% 80%,0% 20%,100% 50%;opacity:.62}
+}
+
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
@@ -895,7 +923,7 @@ document.documentElement.classList.add('js');
       <div class="card-scene" id="cardScene">
         <div class="card-enter">
           <div class="card-float">
-            <div class="card-rot" id="card3d" role="button" tabindex="0" aria-label="Tap to flip the Free Fire demo card">
+            <div class="card-rot" id="card3d" role="img" aria-label="Free Fire gold demo card">
               <div class="card-layer l3"></div><div class="card-layer l2"></div><div class="card-layer l1"></div>
               <div class="card-face">
                 <div class="card-bg">
@@ -1407,10 +1435,7 @@ document.documentElement.classList.add('js');
     const scene = document.getElementById('cardScene');
     const card = document.getElementById('card3d');
     if (!scene || !card) return;
-    card.addEventListener('click', () => card.classList.toggle('is-flipped'));
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.classList.toggle('is-flipped'); }
-    });
+    // Flip interaction intentionally disabled; keep pointer tilt only.
     if (reduced) return;
 
     const MAX = 15;                       // max tilt in degrees
