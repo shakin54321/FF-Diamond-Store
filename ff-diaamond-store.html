@@ -569,6 +569,11 @@ select.input option { background: #0d1330; }
   .pkg.tier-3, .pkg.tier-4 { animation: none !important; transition: none !important; }
 }
 
+
+/* Clean package cards: one fixed package per order, no quantity controls */
+.pkg .qty, .pkg .calc, .pkg .pkg-tier-note, .pkg .per { display: none !important; }
+.pkg .pkg-price { justify-content: center; gap: .25rem; }
+.pkg .pkg-total { display: none !important; }
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
@@ -1214,61 +1219,35 @@ document.documentElement.classList.add('js');
   }
 
   function pkgCard(p) {
-    const id = p.id;
-    if (!state.qty.has(id)) state.qty.set(id, 1);
-    const q = () => state.qty.get(id);
     const off = !p.available;
-
-    const out = el('output', { class: 'qty-v', 'aria-live': 'polite' });
-    const line1 = el('p'); const line2 = el('p');
     const total = el('strong');
-    const minus = el('button', { type: 'button', class: 'qty-btn', 'aria-label': `Decrease quantity for ${fmt.int(p.diamonds)} diamonds` }, icon('minus'));
-    const plus = el('button', { type: 'button', class: 'qty-btn', 'aria-label': `Increase quantity for ${fmt.int(p.diamonds)} diamonds` }, icon('plus'));
+    total.textContent = fmt.taka(p.price);
+    const buy = el('button', {
+      type: 'button',
+      class: 'btn btn-primary btn-block',
+      disabled: off,
+      onclick: () => openConfirm(p, 1)
+    }, off ? 'Unavailable' : 'Buy Now');
 
-    function paint(bump) {
-      const n = q();
-      out.textContent = `${n}x`;
-      line1.replaceChildren(`${fmt.int(p.diamonds)} Diamonds × ${n} = `, el('b', null, `${fmt.int(p.diamonds * n)} Diamonds`));
-      line2.replaceChildren(`${fmt.taka(p.price)} × ${n} = `, el('b', null, fmt.taka(p.price * n)));
-      total.textContent = fmt.taka(p.price * n);
-      minus.disabled = off || n <= 1;
-      plus.disabled = off || n >= state.maxQty;
-      if (bump && !reduced) { total.classList.remove('bump'); void total.offsetWidth; total.classList.add('bump'); }
-    }
-    function step(d) {
-      const n = Math.min(state.maxQty, Math.max(1, q() + d));
-      if (n === q()) return;
-      state.qty.set(id, n); paint(true);
-    }
-    minus.addEventListener('click', () => step(-1));
-    plus.addEventListener('click', () => step(1));
-
-    const buy = el('button', { type: 'button', class: 'btn btn-primary btn-block', disabled: off, onclick: () => openConfirm(p, q()) }, off ? 'Unavailable' : 'Buy Now');
-
-    const tier = Math.min(4, id);
+    const tier = Math.min(4, p.id);
     const tierLabels = ['', 'STARTER DEAL', 'POPULAR PICK', 'TOP FEATURED', 'ULTIMATE PACK'];
-    const tierNotes = ['', 'Easy entry package', 'Great everyday value', 'Spotlight package • 80,000 Diamonds', 'Maximum diamond bundle'];
     const card = el('article', { class: `pkg tier-${tier} reveal${off ? ' is-off' : ''}`, 'aria-label': `${fmt.int(p.diamonds)} diamonds` },
       el('span', { class: 'pkg-ribbon' }, tierLabels[tier]),
       el('div', { class: 'pkg-top' },
         el('div', { class: 'pkg-gem' }, icon('gem', { size: 32 })),
         el('div', null, el('b', { class: 'pkg-d' }, fmt.int(p.diamonds)), el('span', null, 'Diamonds'))),
-      el('p', { class: 'pkg-tier-note' }, tierNotes[tier]),
-      el('div', { class: 'pkg-price' }, el('span', { class: 'cur' }, '৳'), el('span', { class: 'amt' }, fmt.int(p.price)), el('span', { class: 'per' }, 'per pack')),
-      el('div', { class: 'qty', role: 'group', 'aria-label': `Quantity for ${fmt.int(p.diamonds)} diamonds` }, minus, out, plus),
-      el('div', { class: 'calc' }, line1, line2),
-      el('div', { class: 'pkg-total' }, el('span', null, 'Total'), total),
+      el('div', { class: 'pkg-price' },
+        el('span', { class: 'cur' }, '৳'),
+        el('span', { class: 'amt' }, fmt.int(p.price))),
+      el('div', { class: 'pkg-total' }, el('span', null, 'Price'), total),
       buy);
 
-    card.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', `${e.clientX - r.left}px`);
-      card.style.setProperty('--my', `${e.clientY - r.top}px`);
-    }, { passive: true });
-
-    paint(false);
+    paintCardClean(card);
     return card;
+  }
+
+  function paintCardClean(card) {
+    // Static package cards: no quantity controls or per-card calculation UI.
   }
 
   async function loadPackages() {
