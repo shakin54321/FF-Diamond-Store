@@ -873,15 +873,27 @@ select.input option { background: #0d1330; }
  background-size:150% 150%,150% 150%,220% 100%;animation:cardInnerGlow 7s ease-in-out infinite alternate;mix-blend-mode:screen;
 }
 @keyframes cardInnerGlow{0%{background-position:0% 10%,100% 90%,0% 50%;opacity:.48}50%{opacity:.9}100%{background-position:100% 90%,0% 10%,100% 50%;opacity:.62}}
-.cute-sparkle{position:absolute;z-index:4;pointer-events:none;color:#fff8d9;text-shadow:0 0 7px #fff2ad,0 0 16px rgba(255,196,74,.95);font-size:clamp(13px,2.6vw,21px);line-height:1;animation:cuteTwinkle 2.8s ease-in-out infinite}
-.sparkle-one{left:15%;top:22%;animation-delay:-.4s}.sparkle-two{right:19%;top:35%;font-size:clamp(17px,3vw,25px);animation-delay:-1.5s}.sparkle-three{left:66%;bottom:17%;font-size:clamp(10px,2vw,16px);animation-delay:-2.1s}
-@keyframes cuteTwinkle{0%,100%{opacity:.25;transform:scale(.65) rotate(0deg)}45%{opacity:1;transform:scale(1.25) rotate(28deg)}70%{opacity:.72;transform:scale(.92) rotate(48deg)}}
-.cute-orbit{position:absolute;z-index:3;pointer-events:none;width:28%;aspect-ratio:1;border:1px solid rgba(255,247,208,.3);border-radius:50%;right:8%;top:13%;box-shadow:0 0 13px rgba(255,210,112,.16),inset 0 0 12px rgba(255,240,190,.12);animation:orbitDrift 9s linear infinite}
 .cute-orbit::before{content:"";position:absolute;width:7px;height:7px;left:12%;top:16%;border-radius:50%;background:#fff7c9;box-shadow:0 0 8px 3px rgba(255,221,133,.8)}
-@keyframes orbitDrift{to{transform:rotate(360deg)}}
 #card3d .card-face::after{animation:metallicSweep 6.5s ease-in-out infinite!important}
 .card-shadow{animation:shadowPulse 8s ease-in-out infinite!important}
-@media(prefers-reduced-motion:reduce){.card-enter,.card-float,.card-shadow,.cute-sparkle,.cute-orbit,#card3d .card-bg::after,#card3d .card-face::after{animation:none!important}.card-rot{transition:none!important}}
+@media(prefers-reduced-motion:reduce){.card-enter,.card-float,.card-shadow,#card3d .card-bg::after,#card3d .card-face::after{animation:none!important}.card-rot{transition:none!important}}
+
+
+/* Clean final card interaction: no orbit decorations; stable single transform owner */
+.card-scene{perspective:1100px!important;touch-action:pan-y}
+.card-enter{animation:cardSoftEnter .9s cubic-bezier(.2,.75,.25,1) .12s both!important;transform:none!important;filter:none}
+.card-float{animation:none!important;transform:none!important;transform-style:preserve-3d!important}
+#card3d.card-rot{
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
+  transform-style:preserve-3d!important;
+  transition:transform .08s linear!important;
+  will-change:transform;
+  touch-action:none;
+  user-select:none;-webkit-user-select:none;
+  cursor:grab;
+}
+#card3d.card-rot:active{cursor:grabbing}
+@media(prefers-reduced-motion:reduce){#card3d.card-rot{transition:none!important}}
 
 </style>
 <script>
@@ -958,10 +970,6 @@ document.documentElement.classList.add('js');
                   <svg class="card-wm ico ico-gem" aria-hidden="true"><use href="#i-gem"/></svg>
                   <div class="card-sheen"></div>
                   <div class="card-glare"></div>
-                   <span class="cute-sparkle sparkle-one" aria-hidden="true">✦</span>
-                   <span class="cute-sparkle sparkle-two" aria-hidden="true">✧</span>
-                   <span class="cute-sparkle sparkle-three" aria-hidden="true">✦</span>
-                   <span class="cute-orbit" aria-hidden="true"></span>
                 </div>
                 <div class="card-content">
                   <div class="card-top">
@@ -1462,61 +1470,74 @@ document.documentElement.classList.add('js');
   'use strict';
   const { el, icon, fmt, config, reveal, reduced } = window.FF;
 
-  /* =================== 3D card: pointer / touch / device-motion tilt =================== */
+  /* =================== 3D card: direct pointer drag =================== */
   function initCard() {
     const scene = document.getElementById('cardScene');
     const card = document.getElementById('card3d');
     if (!scene || !card) return;
-    // Flip interaction intentionally disabled; keep pointer tilt only.
-    if (reduced) return;
 
-    const MAX = 8;                        // gentle tilt to prevent visual snapping
-    let cx = 0; let cy = 0;              // current rotation
-    let tx = 0; let ty = 0;              // target rotation
-    let raf = 0; let visible = true; let touching = false;
-    const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
+    const MAX = 13;
+    let rx = 0, ry = 0, targetX = 0, targetY = 0;
+    let raf = 0, dragging = false, activePointer = null, visible = true;
+    const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 
     function paint() {
       raf = 0;
-      cx += (tx - cx) * 0.085; cy += (ty - cy) * 0.085;
-      const nx = cy / MAX; const ny = -cx / MAX; // -1..1 in screen terms
-      card.style.setProperty('--rx', `${cx.toFixed(2)}deg`);
-      card.style.setProperty('--ry', `${cy.toFixed(2)}deg`);
-      card.style.setProperty('--gx', `${(50 + nx * 42).toFixed(1)}%`);
-      card.style.setProperty('--gy', `${(30 + ny * 42).toFixed(1)}%`);
-      card.style.setProperty('--sheen', `${(nx * 38).toFixed(1)}%`);
-      card.style.setProperty('--go', `${(0.55 + Math.min(1, Math.hypot(nx, ny)) * 0.45).toFixed(2)}`);
-      if (Math.abs(tx - cx) > 0.02 || Math.abs(ty - cy) > 0.02) schedule();
+      rx += (targetX - rx) * 0.22;
+      ry += (targetY - ry) * 0.22;
+      card.style.setProperty('--rx', rx.toFixed(2) + 'deg');
+      card.style.setProperty('--ry', ry.toFixed(2) + 'deg');
+      const moving = Math.abs(targetX-rx) > 0.03 || Math.abs(targetY-ry) > 0.03;
+      if (moving) schedule();
     }
-    function schedule() { if (!raf && visible) raf = requestAnimationFrame(paint); }
-    function aim(nx, ny) { ty = clamp(nx, -1, 1) * MAX; tx = -clamp(ny, -1, 1) * MAX; schedule(); }
-    function rest() { tx = 0; ty = 0; schedule(); }
-
-    // Mouse: track across the whole hero so the card feels alive
-    const hero = scene.closest('.hero') || scene;
-    hero.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse') return;
+    function schedule() {
+      if (!raf && visible) raf = requestAnimationFrame(paint);
+    }
+    function aimFromPoint(x, y) {
       const r = card.getBoundingClientRect();
-      aim((e.clientX - (r.left + r.width / 2)) / (window.innerWidth * 0.45), (e.clientY - (r.top + r.height / 2)) / (window.innerHeight * 0.45));
-    }, { passive: true });
-    hero.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') rest(); });
+      if (!r.width || !r.height) return;
+      const nx = clamp((x - (r.left + r.width/2)) / (r.width/2), -1, 1);
+      const ny = clamp((y - (r.top + r.height/2)) / (r.height/2), -1, 1);
+      targetY = nx * MAX;
+      targetX = -ny * MAX;
+      schedule();
+    }
+    function reset() { targetX = 0; targetY = 0; schedule(); }
 
-    // Touch: drag on the card itself (vertical page scroll still works because of touch-action: pan-y)
-    scene.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') touching = true; });
-    scene.addEventListener('pointermove', (e) => {
-      if (e.pointerType === 'mouse' || !touching) return;
-      const r = card.getBoundingClientRect();
-      aim((e.clientX - (r.left + r.width / 2)) / (r.width * 0.6), (e.clientY - (r.top + r.height / 2)) / (r.height * 0.6));
-    }, { passive: true });
-    const endTouch = () => { touching = false; rest(); };
-    scene.addEventListener('pointerup', endTouch);
-    scene.addEventListener('pointercancel', endTouch);
-
-    // Device-motion tilt disabled: inconsistent Android sensors can cause sudden visual jumps.
-
-        // Stop work when off-screen
+    card.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      dragging = true;
+      activePointer = e.pointerId;
+      try { card.setPointerCapture(e.pointerId); } catch {}
+      aimFromPoint(e.clientX, e.clientY);
+      e.preventDefault();
+    });
+    card.addEventListener('pointermove', (e) => {
+      if (dragging && e.pointerId === activePointer) {
+        aimFromPoint(e.clientX, e.clientY);
+        e.preventDefault();
+      } else if (e.pointerType === 'mouse' && !dragging) {
+        aimFromPoint(e.clientX, e.clientY);
+      }
+    });
+    function finishDrag(e) {
+      if (!dragging || (e && e.pointerId !== activePointer)) return;
+      dragging = false;
+      activePointer = null;
+      reset();
+    }
+    card.addEventListener('pointerup', finishDrag);
+    card.addEventListener('pointercancel', finishDrag);
+    card.addEventListener('lostpointercapture', finishDrag);
+    card.addEventListener('pointerleave', (e) => {
+      if (e.pointerType === 'mouse' && !dragging) reset();
+    });
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) schedule(); }).observe(scene);
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) schedule();
+        else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      }).observe(scene);
     }
   }
 
