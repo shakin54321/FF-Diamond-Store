@@ -1220,8 +1220,6 @@ document.documentElement.classList.add('js');
 
   function pkgCard(p) {
     const off = !p.available;
-    const total = el('strong');
-    total.textContent = fmt.taka(p.price);
     const buy = el('button', {
       type: 'button',
       class: 'btn btn-primary btn-block',
@@ -1239,15 +1237,9 @@ document.documentElement.classList.add('js');
       el('div', { class: 'pkg-price' },
         el('span', { class: 'cur' }, '৳'),
         el('span', { class: 'amt' }, fmt.int(p.price))),
-      el('div', { class: 'pkg-total' }, el('span', null, 'Price'), total),
       buy);
 
-    paintCardClean(card);
     return card;
-  }
-
-  function paintCardClean(card) {
-    // Static package cards: no quantity controls or per-card calculation UI.
   }
 
   async function loadPackages() {
