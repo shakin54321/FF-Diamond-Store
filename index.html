@@ -708,6 +708,63 @@ select.input option { background: #0d1330; }
   .card-brand-right span{font-size:1.85em}
 }
 
+
+/* Realistic demo bank-card details + restore 3D motion */
+.card-enter{animation:cardIn 1.25s cubic-bezier(.16,.84,.3,1) .15s both!important;transform-style:preserve-3d!important}
+.card-float{animation:float 7s ease-in-out infinite!important;transform-style:preserve-3d!important}
+.card-rot{
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
+  transform-style:preserve-3d!important;
+  transition:transform .22s ease-out;
+  cursor:pointer;
+}
+.card-rot.is-flipped{transform:rotateX(var(--rx,0deg)) rotateY(calc(var(--ry,0deg) + 180deg))!important}
+.card-layer{display:block!important;transform:translateZ(-1.2px)!important}
+.card-layer.l2{transform:translateZ(-2.4px)!important}
+.card-layer.l3{transform:translateZ(-3.6px)!important}
+.card-face,.card-back{
+  position:absolute;inset:0;border-radius:clamp(12px,3vw,24px);
+  overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+}
+.card-face{transform:translateZ(1px)!important}
+.card-back{
+  transform:rotateY(180deg) translateZ(1px);
+  background:linear-gradient(145deg,#f3d88e,#c9973b 55%,#f2d99d);
+  color:#49381e;
+  border:1px solid rgba(255,245,205,.9);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 25px 45px -25px rgba(0,0,0,.55);
+}
+.back-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.25),transparent 42%),linear-gradient(35deg,transparent 35%,rgba(255,255,255,.2) 35.2% 48%,transparent 48.2%)}
+.back-stripe{position:absolute;left:0;right:0;top:19%;height:23%;background:linear-gradient(#343434,#111);box-shadow:0 1px 2px rgba(255,255,255,.25)}
+.back-sign-row{position:absolute;left:8%;right:8%;top:52%;display:flex;align-items:center;gap:3%;height:24%}
+.back-sign-row>span{position:absolute;left:0;top:-1.2em;font:600 .45em var(--font-body);letter-spacing:.1em;color:#70562b}
+.back-sign{height:100%;flex:1;background:repeating-linear-gradient(0deg,#f5edda 0 2px,#e8dfc9 2px 4px);display:flex;align-items:center;padding:0 .7em;font:italic 1.05em Georgia;color:#5e4b31}
+.back-cvv{width:18%;height:100%;background:#fff8e9;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.back-cvv small{font:700 .48em var(--font-body);color:#80653a}
+.back-cvv b{font:800 .9em var(--mono);letter-spacing:.12em;color:#332719}
+.back-copy{position:absolute;left:8%;bottom:13%;font:600 .43em var(--font-body);letter-spacing:.08em;color:#745a2d}
+.back-logo{position:absolute;right:7%;bottom:8%;font:900 1.15em var(--font-display);font-style:italic;color:#c91c2b}
+.back-logo small{display:block;text-align:right;font:700 .36em var(--font-body);letter-spacing:.2em}
+.card-number{font:700 1.12em/1 var(--mono);letter-spacing:.12em;color:#49381e;text-shadow:0 1px rgba(255,255,255,.4);transform:translateZ(24px);white-space:nowrap}
+.card-holder{margin-left:auto;text-align:right}
+.card-holder small{font-size:.48em!important}
+.card-holder b{font-size:.68em!important;letter-spacing:.04em!important}
+.card-mark{font:800 .62em var(--font-display);letter-spacing:.1em;color:#7b5b28;border:1px solid rgba(100,70,25,.35);border-radius:5px;padding:.35em .5em}
+.card-expiry{gap:.8em}
+.card-content{transform-style:preserve-3d}
+.card-top,.card-mid,.card-bot{transform:translateZ(16px)!important}
+.card-sheen{display:block!important}
+.card-glare{display:block!important}
+.card-shadow{animation:shadowPulse 7s ease-in-out infinite!important}
+@media(max-width:480px){
+ .card-number{font-size:1em;letter-spacing:.08em}
+ .back-copy{font-size:.36em}
+}
+@media(prefers-reduced-motion:reduce){
+ .card-enter,.card-float,.card-shadow{animation:none!important}
+ .card-rot{transition:none!important}
+}
+
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
@@ -776,7 +833,7 @@ document.documentElement.classList.add('js');
       <div class="card-scene" id="cardScene">
         <div class="card-enter">
           <div class="card-float">
-            <div class="card-rot" id="card3d" role="img" aria-label="Decorative 3D diamond top-up card">
+            <div class="card-rot" id="card3d" role="button" tabindex="0" aria-label="Tap to flip the Free Fire demo card">
               <div class="card-layer l3"></div><div class="card-layer l2"></div><div class="card-layer l1"></div>
               <div class="card-face">
                 <div class="card-bg">
@@ -793,11 +850,20 @@ document.documentElement.classList.add('js');
                     <div class="chip"></div>
                     <svg class="ico contactless" aria-hidden="true"><use href="#i-wave"/></svg>
                   </div>
+                  <div class="card-number" aria-label="Demo card number">XXXX&nbsp; XXXX&nbsp; XXXX&nbsp; 2026</div>
                   <div class="card-bot card-expiry">
-                    <div><small>EXPIRES</small><b>END OF&nbsp; ▸</b></div>
-                    <span class="card-triangle" aria-hidden="true"></span>
+                    <div><small>EXPIRES</small><b>12/30</b></div>
+                    <div class="card-holder"><small>CARD HOLDER</small><b>FREE FIRE PLAYER</b></div>
+                    <span class="card-mark">VIRTUAL</span>
                   </div>
                 </div>
+              </div>
+              <div class="card-back" aria-label="Card reverse side">
+                <div class="back-bg"></div>
+                <div class="back-stripe"></div>
+                <div class="back-sign-row"><span>AUTHORIZED SIGNATURE</span><div class="back-sign">SHakin</div><div class="back-cvv"><small>CVV</small><b>XXX</b></div></div>
+                <div class="back-copy">DEMO CARD · NO PAYMENT DETAILS · FREE FIRE DIAMOND TOP-UP</div>
+                <div class="back-logo">FF <small>DIAMOND</small></div>
               </div>
             </div>
           </div>
@@ -1278,7 +1344,12 @@ document.documentElement.classList.add('js');
   function initCard() {
     const scene = document.getElementById('cardScene');
     const card = document.getElementById('card3d');
-    if (!scene || !card || reduced) return;
+    if (!scene || !card) return;
+    card.addEventListener('click', () => card.classList.toggle('is-flipped'));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.classList.toggle('is-flipped'); }
+    });
+    if (reduced) return;
 
     const MAX = 15;                       // max tilt in degrees
     let cx = 0; let cy = 0;              // current rotation
