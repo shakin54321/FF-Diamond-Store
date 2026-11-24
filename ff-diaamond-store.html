@@ -478,6 +478,47 @@ select.input option { background: #0d1330; }
 
 [hidden] { display: none !important; }
 
+
+/* Featured 80,000-diamond premium spotlight */
+.pkg.tier-3 {
+  position: relative;
+  z-index: 3;
+  transform: translateY(-13px) scale(1.035);
+  border: 1.5px solid rgba(190, 145, 255, .95);
+  background:
+    radial-gradient(115% 90% at 50% 0%, rgba(192, 132, 255, .34), transparent 62%),
+    radial-gradient(90% 75% at 100% 100%, rgba(65, 205, 255, .19), transparent 65%),
+    linear-gradient(155deg, rgba(94, 48, 160, .36), rgba(20, 19, 43, .92) 72%);
+  box-shadow:
+    0 0 0 1px rgba(190,145,255,.22),
+    0 0 24px rgba(160,95,255,.42),
+    0 0 52px rgba(75,170,255,.18),
+    inset 0 0 30px rgba(175,115,255,.13);
+  animation: featuredDiamondGlow 3.2s ease-in-out infinite;
+}
+.pkg.tier-3 .pkg-ribbon {
+  color: #f0dcff;
+  border-color: rgba(210,170,255,.85);
+  background: linear-gradient(100deg, rgba(117,62,200,.62), rgba(45,125,205,.38));
+  box-shadow: 0 0 16px rgba(174,112,255,.35);
+}
+.pkg.tier-3 .pkg-d,
+.pkg.tier-3 .pkg-price .cur,
+.pkg.tier-3 .pkg-price .amt {
+  color: #ead8ff;
+  text-shadow: 0 0 18px rgba(184,130,255,.42);
+}
+.pkg.tier-3 .pkg-gem {
+  box-shadow: 0 0 22px rgba(164,112,255,.42), 0 0 34px rgba(75,190,255,.18);
+}
+@keyframes featuredDiamondGlow {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(190,145,255,.2), 0 0 22px rgba(160,95,255,.34), 0 0 44px rgba(75,170,255,.13), inset 0 0 28px rgba(175,115,255,.1); }
+  50% { box-shadow: 0 0 0 1px rgba(220,185,255,.42), 0 0 34px rgba(178,115,255,.58), 0 0 62px rgba(75,190,255,.24), inset 0 0 38px rgba(190,135,255,.18); }
+}
+@media (max-width: 559px) {
+  .pkg.tier-3 { transform: translateY(-7px) scale(1.012); }
+}
+
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
@@ -1155,8 +1196,8 @@ document.documentElement.classList.add('js');
     const buy = el('button', { type: 'button', class: 'btn btn-primary btn-block', disabled: off, onclick: () => openConfirm(p, q()) }, off ? 'Unavailable' : 'Buy Now');
 
     const tier = Math.min(4, id);
-    const tierLabels = ['', 'STARTER DEAL', 'POPULAR PICK', 'ELITE VALUE', 'ULTIMATE PACK'];
-    const tierNotes = ['', 'Easy entry package', 'Great everyday value', 'For serious players', 'Maximum diamond bundle'];
+    const tierLabels = ['', 'STARTER DEAL', 'POPULAR PICK', 'FEATURED PICK', 'ULTIMATE PACK'];
+    const tierNotes = ['', 'Easy entry package', 'Great everyday value', 'Premium diamond bundle', 'Maximum diamond bundle'];
     const card = el('article', { class: `pkg tier-${tier} reveal${off ? ' is-off' : ''}`, 'aria-label': `${fmt.int(p.diamonds)} diamonds` },
       el('span', { class: 'pkg-ribbon' }, tierLabels[tier]),
       el('div', { class: 'pkg-top' },
