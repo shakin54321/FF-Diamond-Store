@@ -622,6 +622,50 @@ select.input option { background: #0d1330; }
 [data-view="pay"] .submit-row .btn{min-height:46px}
 @media(max-width:720px){[data-view="pay"] .pay-grid{display:flex;flex-direction:column-reverse}[data-view="pay"] .pay-main,[data-view="pay"] .summary{width:100%}}
 
+
+/* Gold premium card finish inspired by the supplied reference */
+.card-face{
+  color:#44351c;
+  border:1px solid rgba(255,245,205,.9);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),inset 0 -1px 0 rgba(116,77,16,.22),0 38px 65px -30px rgba(230,174,65,.42),0 20px 42px -14px rgba(0,0,0,.65);
+}
+.card-bg{
+  background:
+    linear-gradient(132deg,transparent 0 16%,rgba(255,255,255,.35) 16.2% 17%,transparent 17.2% 37%,rgba(255,255,255,.22) 37.2% 38%,transparent 38.2%),
+    linear-gradient(42deg,transparent 0 24%,rgba(255,255,255,.28) 24.2% 25%,transparent 25.2% 57%,rgba(255,255,255,.2) 57.2% 58%,transparent 58.2%),
+    radial-gradient(120% 120% at 8% 5%,#fff0bd 0%,transparent 48%),
+    linear-gradient(125deg,#f4d88b 0%,#d6a642 36%,#f6dfa0 58%,#c9912c 100%);
+}
+.card-bg::before{
+  opacity:.8;
+  background:
+    linear-gradient(145deg,transparent 0 21%,rgba(255,255,255,.27) 21.2%,transparent 43%),
+    linear-gradient(35deg,transparent 0 44%,rgba(255,255,255,.22) 44.2%,transparent 65%),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0 1px,transparent 1px 3px);
+}
+.card-wm{display:none}
+.card-sheen{background:linear-gradient(105deg,transparent 41%,rgba(255,255,255,.42) 48.5%,rgba(255,248,220,.16) 52%,transparent 60%)}
+.card-glare{background:radial-gradient(circle at var(--gx,30%) var(--gy,18%),rgba(255,255,255,.5),rgba(255,255,255,0) 48%)}
+.card-content{padding:1.7em 1.9em}
+.card-top{align-items:center}
+.card-brand span{font:500 1.35em/1 var(--font-body);letter-spacing:.01em;color:#4b3a22;text-transform:none}
+.card-brand-right{text-align:right}
+.card-brand-right span{font:900 2.15em/.82 var(--font-display);font-style:italic;letter-spacing:-.07em;color:#d3132a;text-shadow:0 1px 0 rgba(255,255,255,.3)}
+.card-brand-right small{color:#8d1b22;letter-spacing:.22em;font-size:.48em;margin-top:.38em}
+.chip{
+  background:linear-gradient(135deg,#c99a4e,#f4d58a 28%,#b98538 54%,#e8c477 76%,#b17b2d);
+  box-shadow:inset 0 0 0 1px rgba(93,63,23,.62),0 .25em .7em rgba(80,53,17,.2);
+}
+.chip::before,.chip::after{background:rgba(99,69,31,.68)}
+.chip::before{box-shadow:0 -.5em 0 rgba(99,69,31,.68),0 .5em 0 rgba(99,69,31,.68)}
+.contactless{color:#45351f}
+.card-bot.card-expiry{justify-content:flex-start;align-items:flex-end}
+.card-expiry small{color:#6f552e;font-size:.68em;letter-spacing:.02em;margin-bottom:.12em}
+.card-expiry b{font:600 .82em/1.1 var(--font-body);letter-spacing:0;color:#594321}
+.card-triangle{position:absolute;left:0;bottom:0;width:0;height:0;border-top:1.2em solid transparent;border-bottom:1.2em solid transparent;border-left:1.7em solid #493d35;transform:translateZ(20px)}
+.card-shadow{background:radial-gradient(ellipse at center,rgba(226,173,70,.45),transparent 70%)}
+@media(max-width:480px){.card-content{padding:1.45em 1.5em}.card-brand-right span{font-size:1.9em}}
+
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
@@ -700,17 +744,16 @@ document.documentElement.classList.add('js');
                 </div>
                 <div class="card-content">
                   <div class="card-top">
-                    <div class="card-brand"><span>FF DIAMOND</span><small>TOP-UP CARD</small></div>
-                    <svg class="ico ico-gem card-gem" aria-hidden="true"><use href="#i-gem"/></svg>
+                    <div class="card-brand"><span>Gold</span></div>
+                    <div class="card-brand card-brand-right"><span>FF</span><small>DIAMOND</small></div>
                   </div>
                   <div class="card-mid">
                     <div class="chip"></div>
                     <svg class="ico contactless" aria-hidden="true"><use href="#i-wave"/></svg>
                   </div>
-                  <div class="card-num" aria-hidden="true">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;</div>
-                  <div class="card-bot">
-                    <div><small>PLAYER UID</small><b>&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</b></div>
-                    <div class="card-mark">BDT</div>
+                  <div class="card-bot card-expiry">
+                    <div><small>EXPIRES</small><b>END OF&nbsp; ▸</b></div>
+                    <span class="card-triangle" aria-hidden="true"></span>
                   </div>
                 </div>
               </div>
