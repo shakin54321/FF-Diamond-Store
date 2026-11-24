@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Free Fire Carding Diamond | Diamond Top-Up with bKash</title>
-<meta name="description" content="Top up Free Fire diamonds in Bangladesh from ৳280. Pay with bKash, every payment is verified by our team, and you can track your order live. Nagad and Rocket are coming soon.">
+<meta name="description" content="Top up Free Fire diamonds in Bangladesh with four premium packages. Pay with bKash, every payment is verified by our team, and you can track your order live. Nagad and Rocket are coming soon.">
 <meta name="theme-color" content="#04050b">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Free Fire Carding Diamond">
@@ -579,6 +579,7 @@ document.documentElement.classList.add('js');
         <p>Prices are in Bangladeshi Taka (&#2547;). Change the quantity and the total updates instantly.</p>
       </div>
       <div class="pkg-grid" id="pkgGrid" aria-live="polite"></div>
+      <p class="demo-disclaimer">নিচের জনপ্রিয়তার সংখ্যা ও activity notification ডেমো উদাহরণ—এগুলো প্রকৃত অর্ডার বা বিক্রির দাবি নয়।</p>
     </div>
   </section>
 
@@ -692,8 +693,8 @@ document.documentElement.classList.add('js');
     DISCLAIMER: 'Independent top-up service. Not affiliated with, endorsed by or sponsored by Garena or Free Fire. All trademarks belong to their respective owners.',
   };
 
-  // [diamonds, price in BDT]
-  const PACKAGES = [[500, 280], [1000, 350], [5000, 750], [10000, 1450], [20000, 2990], [35000, 5750], [50000, 9990]];
+  // [diamonds, price in BDT] — four active premium tiers
+  const PACKAGES = [[8000, 450], [17000, 750], [80000, 1500], [200000, 3000]];
 
   const METHODS = [
     {
@@ -1137,7 +1138,11 @@ document.documentElement.classList.add('js');
 
     const buy = el('button', { type: 'button', class: 'btn btn-primary btn-block', disabled: off, onclick: () => openConfirm(p, q()) }, off ? 'Unavailable' : 'Buy Now');
 
-    const card = el('article', { class: `pkg reveal${off ? ' is-off' : ''}`, 'aria-label': `${fmt.int(p.diamonds)} diamonds` },
+    const tier = Math.min(4, id);
+    const demoSold = [0, 1280, 940, 620, 385][tier];
+    const tierLabel = ['','STARTER','POPULAR','ELITE','LEGENDARY'][tier];
+    const card = el('article', { class: `pkg tier-${tier} reveal${off ? ' is-off' : ''}`, 'aria-label': `${fmt.int(p.diamonds)} diamonds` },
+      el('span', { class: 'pkg-ribbon' }, tierLabel),
       el('div', { class: 'pkg-top' },
         el('div', { class: 'pkg-gem' }, icon('gem', { size: 32 })),
         el('div', null, el('b', { class: 'pkg-d' }, fmt.int(p.diamonds)), el('span', null, 'Diamonds'))),
@@ -1145,6 +1150,7 @@ document.documentElement.classList.add('js');
       el('div', { class: 'qty', role: 'group', 'aria-label': `Quantity for ${fmt.int(p.diamonds)} diamonds` }, minus, out, plus),
       el('div', { class: 'calc' }, line1, line2),
       el('div', { class: 'pkg-total' }, el('span', null, 'Total'), total),
+      el('div', { class: 'pkg-demo-count' }, 'ডেমো জনপ্রিয়তা: ', el('b', null, `${fmt.int(demoSold)}+`), ' (বাস্তব বিক্রির হিসাব নয়)'),
       buy);
 
     card.addEventListener('pointermove', (e) => {
@@ -1215,7 +1221,27 @@ document.documentElement.classList.add('js');
   });
 
   let cardReady = false;
-  window.FFPages.home = () => { if (!cardReady) { cardReady = true; initCard(); } loadPackages(); };
+  let demoStarted = false;
+  function showDemoActivity() {
+    if (demoStarted) return; demoStarted = true;
+    const names = ['আরিফুল ইসলাম','সুমাইয়া আক্তার','তানভীর হাসান','নুসরাত জাহান','রাকিব হোসেন','মেহজাবিন আক্তার','সাকিব আহমেদ','তাসনিম ইসলাম','ইমরান হোসেন','ফারহানা ইয়াসমিন'];
+    const packs = ['8,000 Diamonds · ৳450','17,000 Diamonds · ৳750','80,000 Diamonds · ৳1,500','200,000 Diamonds · ৳3,000'];
+    let index = 0;
+    const show = () => {
+      if (document.hidden || !document.querySelector('[data-view="home"]:not([hidden])')) return;
+      const old = document.querySelector('.demo-toast'); if (old) old.remove();
+      const n = names[index % names.length], p = packs[(index * 3 + 1) % packs.length];
+      const toast = el('div', { class:'demo-toast', role:'status', 'aria-live':'polite' },
+        el('span',{class:'demo-tag'},'DEMO ACTIVITY · SIMULATED'),
+        el('strong',null,n),
+        el('small',null,`উদাহরণ activity · ${p}`),
+        el('small',null,'এটি বাস্তব ক্রেতা বা অর্ডারের notification নয়।'));
+      document.body.append(toast); index++;
+      window.setTimeout(()=>toast.remove(),5200);
+    };
+    show(); window.setInterval(show,10500);
+  }
+  window.FFPages.home = () => { if (!cardReady) { cardReady = true; initCard(); } loadPackages(); showDemoActivity(); };
 })();
 
 (function () {
