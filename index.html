@@ -806,6 +806,24 @@ select.input option { background: #0d1330; }
 }
 
 
+/* 80,000 Diamond Pack emblem: right-side placement with a soft golden halo */
+.pkg.tier-3 { isolation: isolate; }
+.pkg.tier-3 .featured-side-logo {
+  position: absolute;
+  z-index: 1;
+  top: 20%;
+  right: 7.5%;
+  width: clamp(112px, 22%, 224px);
+  height: auto;
+  max-height: 31%;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 0 13px rgba(255, 190, 72, .36)) drop-shadow(0 0 28px rgba(255, 166, 35, .2));
+}
+@media (max-width: 559px) {
+  .pkg.tier-3 .featured-side-logo { top: 23%; right: 5%; width: 25%; max-height: 24%; }
+}
+
 /* Ultimate Pack emblem sits in the open right-side area; keep the left diamond icon unchanged. */
 .pkg.tier-4 { isolation: isolate; }
 .pkg.tier-4 .ultimate-side-logo {
@@ -1561,6 +1579,7 @@ document.documentElement.classList.add('js');
         el('div', { class: 'pkg-gem' }, icon('gem', { size: 32 })),
         el('div', null, el('b', { class: 'pkg-d' }, fmt.int(p.diamonds)), el('span', null, 'Diamonds'))),
       p.id === 4 ? el('img', { class: 'ultimate-side-logo', src: 'https://i.postimg.cc/4ysFTzpC/31550-removebg-preview.png', alt: 'Ultimate Pack emblem', loading: 'lazy', decoding: 'async' }) : null,
+      p.id === 3 ? el('img', { class: 'featured-side-logo', src: 'https://i.postimg.cc/fLn0yCH1/31571-removebg-preview-(1).png', alt: '80,000 Diamond Pack emblem', loading: 'lazy', decoding: 'async' }) : null,
       el('div', { class: 'pkg-price' },
         el('span', { class: 'cur' }, '৳'),
         el('span', { class: 'amt' }, fmt.int(p.price))),
