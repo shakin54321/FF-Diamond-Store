@@ -223,6 +223,23 @@ main { animation: pageIn .5s cubic-bezier(.2, .7, .2, 1) both; }
   border: 1px solid var(--line);
   transition: transform .28s cubic-bezier(.2, .7, .2, 1), border-color .28s;
 }
+.pkg-ribbon { align-self: flex-start; position: relative; z-index: 1; padding: .38rem .72rem; border-radius: 999px; font-size: .68rem; font-weight: 900; letter-spacing: .11em; background: rgba(255,255,255,.1); color: var(--text); border: 1px solid var(--line-strong); }
+.pkg-tier-note { margin: -.45rem 0 -.1rem; color: var(--muted); font-size: .78rem; font-weight: 650; letter-spacing: .02em; }
+.pkg.tier-1 { background: radial-gradient(130% 90% at 100% 0%, rgba(47,190,255,.19), transparent 58%), linear-gradient(160deg, rgba(22,128,180,.16), rgba(255,255,255,.025)); border-color: rgba(67,190,255,.38); }
+.pkg.tier-1 .pkg-ribbon { color: #83dcff; border-color: rgba(67,190,255,.42); background: rgba(22,128,180,.16); }
+.pkg.tier-1 .pkg-gem { background: linear-gradient(145deg, rgba(43,190,255,.3), rgba(24,95,180,.12)); }
+.pkg.tier-2 { background: radial-gradient(130% 90% at 100% 0%, rgba(68,220,151,.18), transparent 58%), linear-gradient(160deg, rgba(26,130,91,.16), rgba(255,255,255,.025)); border-color: rgba(68,220,151,.42); }
+.pkg.tier-2 .pkg-ribbon { color: #8af0bd; border-color: rgba(68,220,151,.45); background: rgba(26,130,91,.18); }
+.pkg.tier-2 .pkg-gem { background: linear-gradient(145deg, rgba(68,220,151,.3), rgba(20,120,80,.12)); }
+.pkg.tier-3 { background: radial-gradient(130% 90% at 100% 0%, rgba(166,112,255,.2), transparent 58%), linear-gradient(160deg, rgba(106,65,175,.18), rgba(255,255,255,.025)); border-color: rgba(166,112,255,.44); }
+.pkg.tier-3 .pkg-ribbon { color: #c8a8ff; border-color: rgba(166,112,255,.48); background: rgba(106,65,175,.2); }
+.pkg.tier-3 .pkg-gem { background: linear-gradient(145deg, rgba(166,112,255,.32), rgba(95,55,160,.12)); }
+.pkg.tier-4 { background: radial-gradient(130% 90% at 100% 0%, rgba(255,184,66,.22), transparent 58%), linear-gradient(160deg, rgba(155,102,24,.2), rgba(255,255,255,.025)); border-color: rgba(255,184,66,.5); box-shadow: inset 0 0 28px rgba(255,184,66,.045), 0 12px 35px rgba(180,118,28,.08); }
+.pkg.tier-4 .pkg-ribbon { color: #ffd58a; border-color: rgba(255,184,66,.52); background: rgba(155,102,24,.22); }
+.pkg.tier-4 .pkg-gem { background: linear-gradient(145deg, rgba(255,184,66,.34), rgba(155,102,24,.14)); }
+.pkg.tier-4 .pkg-price .cur { color: #ffd58a; }
+.pkg.tier-4 .pkg-d { font-size: 1.9rem; }
+@media (max-width: 559px) { .pkg { flex-basis: 100%; } .pkg.tier-4 { transform: none; } }
 .pkg::before { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .3s; pointer-events: none; background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(91, 157, 255, .2), transparent 62%); }
 @media (hover: hover) { .pkg:hover { transform: translateY(-5px); border-color: rgba(120, 160, 255, .45); } .pkg:hover::before { opacity: 1; } }
 .pkg-top { display: flex; align-items: center; gap: .85rem; }
@@ -1137,10 +1154,15 @@ document.documentElement.classList.add('js');
 
     const buy = el('button', { type: 'button', class: 'btn btn-primary btn-block', disabled: off, onclick: () => openConfirm(p, q()) }, off ? 'Unavailable' : 'Buy Now');
 
-    const card = el('article', { class: `pkg reveal${off ? ' is-off' : ''}`, 'aria-label': `${fmt.int(p.diamonds)} diamonds` },
+    const tier = Math.min(4, id);
+    const tierLabels = ['', 'STARTER DEAL', 'POPULAR PICK', 'ELITE VALUE', 'ULTIMATE PACK'];
+    const tierNotes = ['', 'Easy entry package', 'Great everyday value', 'For serious players', 'Maximum diamond bundle'];
+    const card = el('article', { class: `pkg tier-${tier} reveal${off ? ' is-off' : ''}`, 'aria-label': `${fmt.int(p.diamonds)} diamonds` },
+      el('span', { class: 'pkg-ribbon' }, tierLabels[tier]),
       el('div', { class: 'pkg-top' },
         el('div', { class: 'pkg-gem' }, icon('gem', { size: 32 })),
         el('div', null, el('b', { class: 'pkg-d' }, fmt.int(p.diamonds)), el('span', null, 'Diamonds'))),
+      el('p', { class: 'pkg-tier-note' }, tierNotes[tier]),
       el('div', { class: 'pkg-price' }, el('span', { class: 'cur' }, '৳'), el('span', { class: 'amt' }, fmt.int(p.price)), el('span', { class: 'per' }, 'per pack')),
       el('div', { class: 'qty', role: 'group', 'aria-label': `Quantity for ${fmt.int(p.diamonds)} diamonds` }, minus, out, plus),
       el('div', { class: 'calc' }, line1, line2),
@@ -1220,10 +1242,10 @@ document.documentElement.classList.add('js');
     if (promoStarted || reduced) return;
     promoStarted = true;
     const promos = [
-      'আজকের Diamond Offer · 8,000 Diamonds — ৳450',
-      '17,000 Diamonds package available · ৳750',
-      'Premium Diamond Pack · 80,000 — ৳1,500',
-      'Mega Diamond Pack · 200,000 — ৳3,000'
+      '💎 Featured deal: 8,000 Diamonds — ৳450',
+      '🔥 Popular pick: 17,000 Diamonds — ৳750',
+      '✨ Elite value: 80,000 Diamonds — ৳1,500',
+      '👑 Ultimate pack: 200,000 Diamonds — ৳3,000'
     ];
     let index = 0;
     const show = () => {
@@ -1231,8 +1253,8 @@ document.documentElement.classList.add('js');
       toast(promos[index % promos.length], '');
       index++;
     };
-    window.setTimeout(show, 4500);
-    window.setInterval(show, 15000);
+    window.setTimeout(show, 5000);
+    window.setInterval(show, 22000);
   }
   window.FFPages.home = () => { if (!cardReady) { cardReady = true; initCard(); } loadPackages(); showPackagePromos(); };
 })();
