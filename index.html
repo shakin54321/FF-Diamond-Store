@@ -765,6 +765,68 @@ select.input option { background: #0d1330; }
  .card-rot{transition:none!important}
 }
 
+
+/* Fix reverse-side rendering and restore depth + animated metallic lighting */
+.card-scene{perspective:1250px!important;transform:none!important}
+.card-enter,.card-float{transform-style:preserve-3d!important}
+.card-rot{
+  transform-style:preserve-3d!important;
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))!important;
+  transition:transform .18s ease-out;
+  isolation:isolate;
+}
+.card-rot.is-flipped{
+  transform:rotateX(var(--rx,0deg)) rotateY(calc(var(--ry,0deg) + 180deg))!important;
+}
+.card-face,.card-back{
+  position:absolute!important;inset:0!important;
+  border-radius:clamp(12px,3vw,24px)!important;
+  overflow:hidden!important;
+  backface-visibility:hidden!important;
+  -webkit-backface-visibility:hidden!important;
+}
+.card-face{
+  transform:translateZ(2px)!important;
+  background:linear-gradient(135deg,#f8e3a7 0%,#d7a847 35%,#f7dfa0 62%,#bd872e 100%)!important;
+}
+.card-back{
+  display:block!important;
+  transform:rotateY(180deg) translateZ(2px)!important;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.4),transparent 36%),
+    linear-gradient(125deg,#f7e2a5 0%,#d4a346 48%,#f0d48d 100%)!important;
+  color:#49381e!important;
+  opacity:1!important;
+  visibility:visible!important;
+  z-index:2;
+}
+.card-back .back-bg{background:linear-gradient(135deg,rgba(255,255,255,.32),transparent 42%),linear-gradient(35deg,transparent 35%,rgba(255,255,255,.22) 35.2% 48%,transparent 48.2%)!important}
+.card-back .back-stripe{background:linear-gradient(180deg,#414141,#090909 48%,#303030)!important}
+.card-face::after,.card-back::after{
+  content:"";position:absolute;inset:-45% -80%;z-index:8;pointer-events:none;
+  background:linear-gradient(108deg,transparent 39%,rgba(255,255,255,.05) 44%,rgba(255,255,255,.58) 49%,rgba(255,239,190,.18) 53%,transparent 61%);
+  transform:translateX(-65%) rotate(7deg);
+  animation:metallicSweep 5.8s ease-in-out infinite;
+  mix-blend-mode:screen;
+}
+.card-back::after{animation-delay:1.4s;opacity:.65}
+@keyframes metallicSweep{
+  0%,12%{transform:translateX(-65%) rotate(7deg);opacity:0}
+  25%{opacity:.9}
+  62%,100%{transform:translateX(65%) rotate(7deg);opacity:0}
+}
+.card-bg::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 45%,rgba(255,250,225,.28),transparent 60%);
+  animation:goldPulse 4.2s ease-in-out infinite alternate;
+}
+@keyframes goldPulse{from{opacity:.28}to{opacity:.78}}
+.card-number{letter-spacing:.105em;text-shadow:0 1px 0 rgba(255,255,255,.65),0 -1px 0 rgba(120,83,28,.18)}
+.chip{border:1px solid rgba(94,65,24,.65);background:linear-gradient(135deg,#b98434,#f7df9a 28%,#c18c3b 54%,#f1d28a 76%,#a8752a)!important}
+@media(prefers-reduced-motion:reduce){
+ .card-face::after,.card-back::after,.card-bg::after{animation:none!important}
+}
+
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
