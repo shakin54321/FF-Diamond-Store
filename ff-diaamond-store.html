@@ -1318,7 +1318,6 @@ document.documentElement.classList.add('js');
     pending = { packageId: p.id, quantity: qty };
     opener = document.activeElement;
     document.getElementById('dlgPkg').textContent = `${fmt.int(p.diamonds)} Diamonds`;
-    document.getElementById('dlgQty').textContent = `${qty}x`;
     document.getElementById('dlgDia').textContent = `${fmt.int(p.diamonds * qty)} Diamonds`;
     document.getElementById('dlgTotal').textContent = fmt.taka(p.price * qty);
     document.body.classList.add('lock');
