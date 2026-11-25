@@ -36,7 +36,7 @@ p{margin:0;color:#52715c;font-size:14px;line-height:1.75}
 (function(){
  const params=new URLSearchParams(location.search);
  const target=new URL('Payment.html',location.href);
- for(const key of ['diamonds','price']){const value=params.get(key);if(value!==null)target.searchParams.set(key,value);}
+ for(const key of ['diamonds','price','uid']){const value=params.get(key);if(value!==null)target.searchParams.set(key,value);}
  setTimeout(()=>location.replace(target.toString()),6000);
 })();
 </script>
