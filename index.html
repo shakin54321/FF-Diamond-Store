@@ -1681,6 +1681,7 @@ document.documentElement.classList.add('js');
   let opener = null;
 
   function openConfirm(p, qty) {
+    window.__ffPendingPackage = { diamonds: p.diamonds, price: p.price };
     pending = { packageId: p.id, quantity: qty };
     opener = document.activeElement;
     document.getElementById('dlgPkg').textContent = `${fmt.int(p.diamonds)} Diamonds`;
@@ -1706,10 +1707,14 @@ document.documentElement.classList.add('js');
   dlg.addEventListener('click', (e) => { if (e.target === dlg) closeConfirm(); });        // backdrop click
   document.getElementById('dlgNo').addEventListener('click', closeConfirm);                // selection is kept
   document.getElementById('dlgYes').addEventListener('click', () => {
-    if (!pending) return;
-    // The selection travels in the URL (refresh-safe). The server re-reads price and availability itself.
-    const go = pending; dlg.close();
-    location.hash = `#/pay?pkg=${go.packageId}&qty=${go.quantity}`;
+    if (!pending || !window.__ffPendingPackage) return;
+    const go = pending;
+    const selected = window.__ffPendingPackage;
+    dlg.close();
+    const paymentUrl = new URL('Payment.html', window.location.href);
+    paymentUrl.searchParams.set('diamonds', String(selected.diamonds * go.quantity));
+    paymentUrl.searchParams.set('price', String(selected.price * go.quantity));
+    window.location.href = paymentUrl.toString();
   });
 
   let cardReady = false;
