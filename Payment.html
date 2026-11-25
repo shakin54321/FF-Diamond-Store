@@ -441,7 +441,7 @@
         </div>
 
         <div class="bottom-bar" id="bottom-bar">
-            <div class="total-text">পে করুন 580.00</div>
+            <div class="total-text">পে করুন <span id="payment-total">580.00</span></div>
         </div>
     </div>
 
@@ -465,7 +465,7 @@
         </div>
 
         <div class="amount-box">
-            ৳ 580
+            ৳ <span id="payment-amount">580</span>
         </div>
 
         <div class="pink-panel">
@@ -496,7 +496,7 @@
                 <li>*247# ডায়াল করে আপনার bKash (মোবাইল মেনুতে যান অথবা bKash অ্যাপ খুলুন।</li>
                 <li>পেমেন্ট -এ ক্লিক করুন।</li>
                 <li>এই নম্বরে টাকা পাঠান <span class="phone-number">01876859887</span> <button class="copy-btn" onclick="copyNumber()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> কপি</button></li>
-                <li>টাকার পরিমাণ <span class="phone-number">580</span></li>
+                <li>টাকার পরিমাণ <span class="phone-number" id="payment-instruction-amount">580</span></li>
                 <li>নিশ্চিত করে এখন আপনার bKash PIN লিখুন।</li>
                 <li>টাকা পাঠান এবং ট্রানজেকশন আইডি কপি করুন।</li>
                 <li>ট্রানজেকশন আইডি লিখে ভেরিফাই চাপুন।</li>
@@ -510,6 +510,19 @@
     </div>
 
     <script>
+        (function setSelectedPackageAmount() {
+            const params = new URLSearchParams(window.location.search);
+            const rawPrice = params.get('price');
+            const price = Number(rawPrice);
+            if (rawPrice && Number.isFinite(price) && price > 0) {
+                document.getElementById('payment-total').textContent =
+                    price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const whole = price.toLocaleString('en-US', { maximumFractionDigits: 0 });
+                document.getElementById('payment-amount').textContent = whole;
+                document.getElementById('payment-instruction-amount').textContent = whole;
+            }
+        })();
+
         function showBkash() {
             document.getElementById('main-view').style.display = 'none';
             document.getElementById('bkash-view').style.display = 'flex';
