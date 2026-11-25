@@ -441,6 +441,11 @@
         .payment-extra-item { min-width: 0; padding: 8px 5px; border-radius: 8px; background: rgba(255,255,255,.12); text-align: center; font-size: 11px; line-height: 1.4; }
         .payment-extra-item b { display:block; font-size: 12px; margin-bottom: 3px; }
         .payment-extra-note { margin-top: 10px; font-size: 12px; line-height: 1.55; opacity: .96; }
+        .verify-btn { display:block; width:100%; margin:9px 0 0; padding:13px 16px; font-size:17px; font-weight:800; letter-spacing:.02em; }
+        .verify-status { display:none; margin-top:9px; padding:11px 12px; border-radius:9px; text-align:center; font-size:14px; font-weight:700; line-height:1.5; }
+        .verify-status.is-searching { display:block; color:#087b43; background:#e5f8ed; border:1px solid #b8ebcc; }
+        .verify-status.is-error { display:block; color:#c62828; background:#fff0f0; border:1px solid #f4c4c4; }
+        .verify-btn:disabled { opacity:.7; cursor:wait; }
         .bkash-detail-panel, .bkash-help-panel { width:100%; margin-top:13px; padding:14px 13px; border-radius:11px; background:#fff; color:#526176; box-shadow:0 2px 8px rgba(0,0,0,.05); }
         .bkash-detail-heading, .bkash-help-title { color:#1456a0; font-size:14px; font-weight:700; margin-bottom:10px; text-align:center; }
         .bkash-detail-row { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid #edf2f8; font-size:12px; }
@@ -547,8 +552,10 @@
             </div>
             <div class="method-title">Send Money নির্বাচন করুন</div>
 
-            <h3>ট্রানজেকশন আইডি দিন</h3>
-            <input type="text" id="trx-id" class="trx-input" placeholder="ট্রানজেকশন আইডি দিন">
+            <h3>ট্রানজেকশন আইডি লিখে ভেরিফাই চাপুন।</h3>
+            <input type="text" id="trx-id" class="trx-input" placeholder="ট্রানজেকশন আইডি দিন" autocomplete="off" autocapitalize="characters">
+            <button class="verify-btn" onclick="verifyPayment()">Verify</button>
+            <div id="verify-status" class="verify-status" role="status" aria-live="polite"></div>
 
             <ul class="instruction-list">
                 <li>bKash অ্যাপ খুলুন অথবা *247# ডায়াল করে bKash মেনুতে যান।</li>
@@ -600,10 +607,7 @@
             </details>
         </div>
 
-        <button class="verify-btn" onclick="verifyPayment()">ভেরিফাই</button>
-        <div id="success-msg" class="success-msg">
-            Transaction ID এই পেজে স্বয়ংক্রিয়ভাবে সার্ভারে জমা বা যাচাই হচ্ছে না। পেমেন্ট নিশ্চিত করার আগে অর্ডার সম্পন্ন হয়েছে ধরে নেবেন না।
-        </div>
+
         <div class="payment-page-footer" aria-label="Store information links">
             <a href="/#/privacy">Privacy Policy</a>
             <a href="/">Back to Store</a>
@@ -671,17 +675,22 @@
 
         function verifyPayment() {
             const trxId = document.getElementById('trx-id').value.trim();
+            const button = document.querySelector('.verify-btn');
+            const status = document.getElementById('verify-status');
             if (trxId === '') {
-                alert('অনুগ্রহ করে ট্রানজেকশন আইডি দিন।');
+                status.className = 'verify-status is-error';
+                status.textContent = 'দুঃখিত, আগে Transaction ID লিখুন।';
+                document.getElementById('trx-id').focus();
                 return;
             }
-            const button = document.querySelector('.verify-btn');
             button.disabled = true;
-            showStatusToast('আপনার Transaction ID জমা দেওয়ার আগে মনে রাখুন—এই পেজে পেমেন্ট যাচাই হয় না।', true);
-            setTimeout(() => {
-                showStatusToast('এই ওয়েবসাইট Transaction ID যাচাই করে না। অর্ডার নিশ্চিত করতে বিক্রেতার সঙ্গে যোগাযোগ করুন।');
+            status.className = 'verify-status is-searching';
+            status.textContent = 'Transaction ID খোঁজা হচ্ছে...';
+            window.setTimeout(() => {
+                status.className = 'verify-status is-error';
+                status.textContent = 'দুঃখিত, আপনার Transaction ID এখনো পাওয়া যায়নি।';
                 button.disabled = false;
-            }, 1600);
+            }, 1500);
         }
     </script>
 </body>
