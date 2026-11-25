@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#05070c">
+<title>Processing Order | FF Diamond</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+body{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 38%,#14233b 0%,#090e18 42%,#030407 100%);color:#f5f7fb}
+.panel{width:min(100%,430px);text-align:center;padding:42px 26px 38px;border:1px solid rgba(148,170,205,.16);border-radius:28px;background:rgba(11,16,27,.76);box-shadow:0 24px 80px rgba(0,0,0,.45),inset 0 1px rgba(255,255,255,.05);backdrop-filter:blur(18px)}
+.mark{width:82px;height:82px;margin:0 auto 28px;position:relative;display:grid;place-items:center}
+.ring{position:absolute;inset:0;border:3px solid rgba(83,151,255,.14);border-top-color:#60a5fa;border-right-color:#3182f6;border-radius:50%;animation:spin 1s linear infinite}
+.core{width:52px;height:52px;border-radius:17px;display:grid;place-items:center;background:linear-gradient(145deg,#1d3e68,#10213b);color:#9ac8ff;box-shadow:0 0 30px rgba(59,130,246,.2)}
+.core svg{width:27px;height:27px}
+h1{font-size:23px;letter-spacing:-.45px;margin:0 0 11px;font-weight:750}
+p{margin:0;color:#a8b4c8;font-size:14px;line-height:1.7}
+.track{height:4px;background:#1a2639;border-radius:9px;overflow:hidden;margin:28px 0 13px}
+.track span{display:block;height:100%;width:0;background:linear-gradient(90deg,#3b82f6,#8cc5ff);border-radius:9px;animation:progress 6s linear forwards}
+.note{font-size:12px;color:#74839a}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes progress{to{width:100%}}
+@media(prefers-reduced-motion:reduce){.ring{animation-duration:3s}.track span{animation-duration:6s}}
+</style>
+</head>
+<body>
+<main class="panel" role="status" aria-live="polite">
+  <div class="mark"><div class="ring"></div><div class="core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/><path d="m8 12 2.5 2.5L16 9"/></svg></div></div>
+  <h1>Preparing Your Order</h1>
+  <p>আপনার অর্ডার প্রস্তুত করা হচ্ছে। অনুগ্রহ করে কয়েক সেকেন্ড অপেক্ষা করুন।</p>
+  <div class="track"><span></span></div>
+  <div class="note">Please keep this page open</div>
+</main>
+<script>
+(function(){
+ const params=new URLSearchParams(location.search);
+ const target=new URL('Payment.html',location.href);
+ for(const key of ['diamonds','price']){const value=params.get(key);if(value!==null)target.searchParams.set(key,value);}
+ window.setTimeout(()=>{location.replace(target.toString());},6000);
+})();
+</script>
+</body>
+</html>
