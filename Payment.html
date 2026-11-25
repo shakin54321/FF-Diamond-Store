@@ -192,19 +192,29 @@
 
         .nav-btn {
             position: absolute;
-            color: #a0aabf;
-            font-size: 22px;
+            top: 50%;
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            transform: translateY(-50%);
+            color: #7d8da7;
+            font-size: 34px;
+            line-height: 1;
             cursor: pointer;
-            font-weight: 400;
+            font-weight: 500;
+            border-radius: 50%;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .back-btn {
-            left: 15px;
+            left: 10px;
+            font-size: 38px;
         }
 
         .close-btn {
-            right: 15px;
-            font-size: 24px;
+            right: 10px;
+            font-size: 38px;
         }
 
         .bkash-header-card img {
@@ -431,6 +441,21 @@
         .payment-extra-item { min-width: 0; padding: 8px 5px; border-radius: 8px; background: rgba(255,255,255,.12); text-align: center; font-size: 11px; line-height: 1.4; }
         .payment-extra-item b { display:block; font-size: 12px; margin-bottom: 3px; }
         .payment-extra-note { margin-top: 10px; font-size: 12px; line-height: 1.55; opacity: .96; }
+        .bkash-detail-panel, .bkash-help-panel { width:100%; margin-top:13px; padding:14px 13px; border-radius:11px; background:#fff; color:#526176; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+        .bkash-detail-heading, .bkash-help-title { color:#1456a0; font-size:14px; font-weight:700; margin-bottom:10px; text-align:center; }
+        .bkash-detail-row { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid #edf2f8; font-size:12px; }
+        .bkash-detail-row:last-child { border-bottom:0; }
+        .bkash-detail-row strong { color:#34445d; text-align:right; overflow-wrap:anywhere; }
+        .bkash-detail-row .bkash-pending { color:#b7791f; }
+        .bkash-help-step { display:flex; align-items:flex-start; gap:10px; margin:10px 0; font-size:12px; line-height:1.55; }
+        .bkash-help-step span { flex:0 0 23px; width:23px; height:23px; display:grid; place-items:center; border-radius:50%; background:#e8f2ff; color:#1456a0; font-weight:800; }
+        .bkash-help-step p { margin:2px 0 0; }
+        .bkash-tip-panel { width:100%; margin-top:13px; padding:13px; border-radius:11px; background:#eaf3ff; border:1px solid #d4e6fb; color:#35516f; font-size:12px; line-height:1.6; }
+        .bkash-tip-panel strong { display:block; color:#1456a0; margin-bottom:4px; font-size:13px; }
+        .bkash-tip-panel p { margin:0; }
+        .bkash-faq { width:100%; margin-top:9px; padding:12px 13px; border-radius:10px; background:#fff; color:#526176; box-shadow:0 2px 8px rgba(0,0,0,.04); font-size:12px; }
+        .bkash-faq summary { color:#1456a0; font-weight:700; cursor:pointer; }
+        .bkash-faq p { margin:9px 0 0; line-height:1.6; }
         .payment-page-footer { width:100%; max-width:420px; padding: 8px 18px 34px; display:flex; justify-content:center; gap:18px; flex-wrap:wrap; font-size:13px; }
         .payment-page-footer a { color:#1456a0; font-weight:700; text-decoration:none; }
         .payment-page-footer a:focus-visible { outline:2px solid #1769c2; outline-offset:3px; border-radius:4px; }
@@ -543,6 +568,36 @@
                 </div>
                 <p class="payment-extra-note">এটি একটি স্বাধীন payment instruction page—অফিসিয়াল bKash পেজ নয়। Transaction ID এখানে স্বয়ংক্রিয়ভাবে যাচাই হয় না; বিক্রেতার নিশ্চিতকরণ প্রয়োজন। PIN বা OTP কখনো দেবেন না।</p>
             </div>
+
+            <div class="bkash-detail-panel">
+                <div class="bkash-detail-heading">আপনার পেমেন্টের সংক্ষিপ্ত তথ্য</div>
+                <div class="bkash-detail-row"><span>Payment method</span><strong>bKash · Send Money</strong></div>
+                <div class="bkash-detail-row"><span>Receiver number</span><strong>01768780058</strong></div>
+                <div class="bkash-detail-row"><span>Payable amount</span><strong>৳ <span id="payment-detail-amount">580</span></strong></div>
+                <div class="bkash-detail-row"><span>Payment status</span><strong class="bkash-pending">Awaiting manual review</strong></div>
+            </div>
+
+            <div class="bkash-help-panel">
+                <div class="bkash-help-title">পেমেন্ট সম্পন্ন করার পর কী করবেন?</div>
+                <div class="bkash-help-step"><span>1</span><p>bKash থেকে সফল Send Money-এর confirmation দেখুন।</p></div>
+                <div class="bkash-help-step"><span>2</span><p>Confirmation message থেকে আসল Transaction ID কপি করুন।</p></div>
+                <div class="bkash-help-step"><span>3</span><p>উপরের ঘরে TrxID লিখে নির্দেশনা অনুসরণ করুন।</p></div>
+                <div class="bkash-help-step"><span>4</span><p>বিক্রেতা পেমেন্ট নিশ্চিত করার পরই অর্ডার সম্পন্ন বলে গণ্য হবে।</p></div>
+            </div>
+
+            <div class="bkash-tip-panel">
+                <strong>মনে রাখবেন</strong>
+                <p>ভুল নম্বর বা ভুল amount-এ টাকা পাঠাবেন না। কোনো সমস্যা হলে একই Transaction ID দিয়ে একাধিকবার পেমেন্ট করবেন না। PIN, OTP বা bKash password কাউকে জানাবেন না।</p>
+            </div>
+
+            <details class="bkash-faq">
+                <summary>Transaction ID কোথায় পাব?</summary>
+                <p>Send Money সফল হওয়ার পর bKash confirmation message বা transaction details-এ TrxID দেখতে পাবেন।</p>
+            </details>
+            <details class="bkash-faq">
+                <summary>এই পেজ কি নিজে থেকে পেমেন্ট যাচাই করে?</summary>
+                <p>না। এই পেজে TrxID স্বয়ংক্রিয়ভাবে যাচাই হয় না। বিক্রেতাকে payment details মিলিয়ে নিশ্চিত করতে হবে।</p>
+            </details>
         </div>
 
         <button class="verify-btn" onclick="verifyPayment()">ভেরিফাই</button>
@@ -575,6 +630,7 @@
                 const whole = price.toLocaleString('en-US', { maximumFractionDigits: 0 });
                 document.getElementById('payment-amount').textContent = whole;
                 document.getElementById('payment-instruction-amount').textContent = whole;
+                document.getElementById('payment-detail-amount').textContent = whole;
             }
         })();
 
