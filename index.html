@@ -406,6 +406,27 @@ select.input option { background: #0d1330; }
 .sum-total { display: flex; justify-content: space-between; align-items: baseline; padding-top: 1rem; }
 .sum-total span { color: var(--muted); font-weight: 600; }
 .sum-total strong { font: 800 1.9rem/1 var(--font-display); background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+/* Payment selection page additions only */
+.pay-choice-intro { margin:0 0 1rem; padding:1rem; border:1px solid rgba(91,157,255,.25); border-radius:18px; background:linear-gradient(135deg,rgba(61,123,255,.12),rgba(123,92,255,.07)); }
+.pay-choice-kicker { display:inline-flex; align-items:center; gap:.45rem; color:var(--blue-2); font-size:.72rem; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+.pay-choice-intro h3 { margin:.45rem 0 .35rem; font-size:1.12rem; }
+.pay-choice-intro p { color:var(--muted); font-size:.88rem; }
+.pay-choice-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.65rem; margin-top:.9rem; }
+.pay-choice-fact { min-width:0; padding:.75rem; border:1px solid var(--line); border-radius:13px; background:rgba(0,0,0,.18); }
+.pay-choice-fact b { display:block; margin-bottom:.2rem; font-size:.82rem; }
+.pay-choice-fact span { display:block; color:var(--muted); font-size:.76rem; line-height:1.5; }
+.pay-choice-steps { display:grid; gap:.6rem; margin:1rem 0; }
+.pay-choice-step { display:flex; align-items:flex-start; gap:.7rem; padding:.75rem; border:1px solid var(--line); border-radius:14px; background:rgba(255,255,255,.025); }
+.pay-choice-step i { flex:0 0 26px; width:26px; height:26px; display:grid; place-items:center; border-radius:50%; background:rgba(61,123,255,.18); color:#a9caff; font-style:normal; font-weight:800; font-size:.78rem; }
+.pay-choice-step b { display:block; font-size:.84rem; }
+.pay-choice-step span { display:block; color:var(--muted); font-size:.77rem; line-height:1.45; }
+.pay-choice-note { margin-top:.85rem; padding:.85rem .95rem; border-radius:14px; background:rgba(49,213,139,.07); border:1px solid rgba(49,213,139,.2); color:var(--muted); font-size:.8rem; line-height:1.55; }
+.pay-choice-note strong { color:#8be7bb; }
+.pay-choice-faq { margin-top:.65rem; padding:.8rem .9rem; border:1px solid var(--line); border-radius:13px; background:rgba(255,255,255,.025); }
+.pay-choice-faq summary { cursor:pointer; font-size:.83rem; font-weight:750; }
+.pay-choice-faq p { margin-top:.55rem; color:var(--muted); font-size:.78rem; line-height:1.55; }
+@media (max-width:420px) { .pay-choice-facts { gap:.5rem; } .pay-choice-fact { padding:.65rem; } }
+
 .methods { display: grid; gap: .7rem; grid-template-columns: 1fr; }
 @media (min-width: 640px) { .methods { grid-template-columns: repeat(3, 1fr); } }
 .method { --brand: var(--blue-2); position: relative; display: flex; flex-direction: row; align-items: center; gap: .8rem; width: 100%; padding: .95rem 1rem; border-radius: 18px; border: 1px solid var(--line); background: rgba(255, 255, 255, .03); text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: border-color .2s, background .25s, box-shadow .25s, transform .15s; }
@@ -1873,6 +1894,27 @@ document.documentElement.classList.add('js');
       btn.addEventListener('click', () => select(m));
       return btn;
     });
+    const paymentOverview = el('section', { class: 'pay-choice-intro', 'aria-label': 'Payment overview' },
+      el('span', { class: 'pay-choice-kicker' }, icon('shield', { size: 15 }), 'SECURE PAYMENT GUIDE'),
+      el('h3', null, 'Choose how you want to pay'),
+      el('p', null, 'নিচে আপনার সুবিধামতো available payment method নির্বাচন করুন। অর্ডারের সঠিক amount এই পেজেই দেখানো হবে।'),
+      el('div', { class: 'pay-choice-facts' },
+        el('div', { class: 'pay-choice-fact' }, el('b', null, 'Exact amount'), el('span', null, 'শুধু Order Summary-তে দেখানো মোট টাকাই পাঠাবেন।')),
+        el('div', { class: 'pay-choice-fact' }, el('b', null, 'Available methods'), el('span', null, 'যে method active আছে সেটিই নির্বাচন করতে পারবেন।')),
+        el('div', { class: 'pay-choice-fact' }, el('b', null, 'Transaction ID'), el('span', null, 'পেমেন্ট সফল হলে confirmation থেকে TrxID রাখুন।')),
+        el('div', { class: 'pay-choice-fact' }, el('b', null, 'Manual confirmation'), el('span', null, 'পেমেন্ট details seller যাচাই না করা পর্যন্ত order Pending থাকবে।')))),
+    const paymentSteps = el('div', { class: 'pay-choice-steps', 'aria-label': 'Payment steps' },
+      el('div', { class: 'pay-choice-step' }, el('i', null, '01'), el('div', null, el('b', null, 'Select a payment method'), el('span', null, 'bKash / Nagad / Rocket card-এ availability দেখে নির্বাচন করুন।'))),
+      el('div', { class: 'pay-choice-step' }, el('i', null, '02'), el('div', null, el('b', null, 'Check receiver and amount'), el('span', null, 'নম্বর ও amount দুবার মিলিয়ে তারপর payment app-এ যান।'))),
+      el('div', { class: 'pay-choice-step' }, el('i', null, '03'), el('div', null, el('b', null, 'Keep your payment receipt'), el('span', null, 'Successful payment-এর confirmation message এবং TrxID সংরক্ষণ করুন।')))),
+    const paymentSafety = el('div', { class: 'pay-choice-note' },
+      el('strong', null, 'Security reminder: '),
+      'কোনো অবস্থাতেই এখানে বা কাউকে আপনার mobile banking PIN, OTP বা password দেবেন না। এই storefront নিজে থেকে TrxID বা টাকা receive হয়েছে কি না independently verify করতে পারে না।'),
+    const paymentFaq = el('div', { class: 'pay-choice-faqs' },
+      el('details', { class: 'pay-choice-faq' }, el('summary', null, 'কোন payment method ব্যবহার করব?'), el('p', null, 'যে option active এবং available দেখাবে সেটি বেছে নিন। Coming soon দেখালে সেটি এখনো ব্যবহার করা যাবে না।')),
+      el('details', { class: 'pay-choice-faq' }, el('summary', null, 'ভুল amount পাঠালে কী হবে?'), el('p', null, 'পেমেন্ট করার আগে amount ও receiver number মিলিয়ে নিন। ভুল হলে আরেকটি payment না করে seller-এর সঙ্গে যোগাযোগ করুন।')),
+      el('details', { class: 'pay-choice-faq' }, el('summary', null, 'পেমেন্টের পর order কখন complete হবে?'), el('p', null, 'Seller payment details মিলিয়ে নিশ্চিত করার পর order status update করবেন।')),
+      el('details', { class: 'pay-choice-faq' }, el('summary', null, 'PIN বা OTP কি দিতে হবে?'), el('p', null, 'না। PIN/OTP শুধু নিজের official payment app-এ ব্যবহার করবেন; এই website-এ কখনো লিখবেন না।')));
     const methodGroup = el('div', { class: 'methods', role: 'radiogroup', 'aria-label': 'Payment method' }, methodBtns);
     // arrow-key navigation for the radio group
     methodGroup.addEventListener('keydown', (e) => {
@@ -2066,9 +2108,13 @@ document.documentElement.classList.add('js');
       cfg.demoMode ? el('div', { class: 'alert alert-warn' }, icon('alert', { size: 18 }), el('span', null, 'Demo mode: orders are saved on this device only and are NOT sent to the store. (Store owner: set OWNER_WHATSAPP at the top of the data section in this file.)')) : null,
       el('section', { class: 'panel', 'aria-labelledby': 'h-method' },
         el('h2', { id: 'h-method' }, el('span', { class: 'n' }, '1'), 'Choose a payment method'),
+        paymentOverview,
         methodGroup,
         noMethods ? el('div', { class: 'alert alert-warn sticky-note' }, icon('alert', { size: 18 }), el('span', null, 'Payments are temporarily unavailable. Please try again later or contact support.')) : null,
-        detailsHost),
+        detailsHost,
+        paymentSteps,
+        paymentSafety,
+        paymentFaq),
       el('section', { class: 'panel', 'aria-labelledby': 'h-form' },
         el('h2', { id: 'h-form' }, el('span', { class: 'n' }, '2'), 'Confirm your details'),
         form));
