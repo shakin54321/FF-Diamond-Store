@@ -44,10 +44,10 @@
  document.getElementById('amount').textContent=fmt(diamonds)+' Diamonds';
  document.getElementById('price').textContent='৳'+fmt(price);
  const uid=document.getElementById('uid'),err=document.getElementById('error'),btn=document.getElementById('buy');
- uid.addEventListener('input',()=>{uid.value=uid.value.replace(/\\D/g,'');err.textContent='';});
+ uid.addEventListener('input',()=>{uid.value=uid.value.replace(/\D/g,'');err.textContent='';});
  document.getElementById('orderForm').addEventListener('submit',e=>{
   e.preventDefault();const value=uid.value.trim();
-  if(!/^\\d{6,14}$/.test(value)){err.textContent='সঠিক Player UID দিন (৬–১৪ সংখ্যার)।';uid.focus();return;}
+  if(!/^\d{6,14}$/.test(value)){err.textContent='সঠিক Player UID দিন (৬–১৪ সংখ্যার)।';uid.focus();return;}
   btn.disabled=true;btn.textContent='Please wait…';
   const next=new URL('Processing.html',location.href);
   next.searchParams.set('diamonds',String(diamonds));next.searchParams.set('price',String(price));next.searchParams.set('uid',value);
