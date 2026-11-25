@@ -445,6 +445,12 @@
         .verify-status { display:none; margin-top:9px; padding:11px 12px; border-radius:9px; text-align:center; font-size:14px; font-weight:700; line-height:1.5; }
         .verify-status.is-searching { display:block; color:#087b43; background:#e5f8ed; border:1px solid #b8ebcc; }
         .verify-status.is-error { display:block; color:#c62828; background:#fff0f0; border:1px solid #f4c4c4; }
+        .verify-btn { display:flex !important; visibility:visible !important; position:relative; z-index:3; min-height:52px; align-items:center; justify-content:center; opacity:1; }
+        .verify-btn:disabled { opacity:.75 !important; cursor:wait; }
+        .status-toast.error { color:#7f1d1d; background:#fff1f2; border-color:#fecdd3; box-shadow:0 12px 34px rgba(127,29,29,.18); }
+        .status-toast.error .toast-icon { background:#ffe4e6; color:#dc2626; }
+        .status-toast.processing { color:#14532d; background:#f0fdf4; border-color:#bbf7d0; }
+        .status-toast { top:calc(14px + env(safe-area-inset-top)); }
         .verify-btn:disabled { opacity:.7; cursor:wait; }
         .bkash-detail-panel, .bkash-help-panel { width:100%; margin-top:13px; padding:14px 13px; border-radius:11px; background:#fff; color:#526176; box-shadow:0 2px 8px rgba(0,0,0,.05); }
         .bkash-detail-heading, .bkash-help-title { color:#1456a0; font-size:14px; font-weight:700; margin-bottom:10px; text-align:center; }
@@ -555,7 +561,6 @@
             <h3>ট্রানজেকশন আইডি লিখে ভেরিফাই চাপুন।</h3>
             <input type="text" id="trx-id" class="trx-input" placeholder="ট্রানজেকশন আইডি দিন" autocomplete="off" autocapitalize="characters">
             <button class="verify-btn" onclick="verifyPayment()">Verify</button>
-            <div id="verify-status" class="verify-status" role="status" aria-live="polite"></div>
 
             <ul class="instruction-list">
                 <li>bKash অ্যাপ খুলুন অথবা *247# ডায়াল করে bKash মেনুতে যান।</li>
@@ -660,35 +665,32 @@
         }
 
         let toastTimer;
-        function showStatusToast(message, processing = false) {
+        function showStatusToast(message, state = 'error') {
             const toast = document.getElementById('status-toast');
             const icon = document.getElementById('toast-icon');
             document.getElementById('toast-text').textContent = message;
-            toast.classList.toggle('processing', processing);
-            icon.innerHTML = processing
+            toast.classList.toggle('processing', state === 'processing');
+            toast.classList.toggle('error', state === 'error');
+            icon.innerHTML = state === 'processing'
                 ? '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 12a8 8 0 1 1-2.34-5.66"/></svg>'
-                : '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>';
+                : '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 6 12 12M18 6 6 18"/></svg>';
             toast.classList.add('show');
             clearTimeout(toastTimer);
-            if (!processing) toastTimer = setTimeout(() => toast.classList.remove('show'), 4200);
+            if (state !== 'processing') toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
         function verifyPayment() {
             const trxId = document.getElementById('trx-id').value.trim();
             const button = document.querySelector('.verify-btn');
-            const status = document.getElementById('verify-status');
             if (trxId === '') {
-                status.className = 'verify-status is-error';
-                status.textContent = 'দুঃখিত, আগে Transaction ID লিখুন।';
+                showStatusToast('দুঃখিত, আগে Transaction ID লিখুন।', 'error');
                 document.getElementById('trx-id').focus();
                 return;
             }
             button.disabled = true;
-            status.className = 'verify-status is-searching';
-            status.textContent = 'Transaction ID খোঁজা হচ্ছে...';
+            showStatusToast('Transaction ID খোঁজা হচ্ছে...', 'processing');
             window.setTimeout(() => {
-                status.className = 'verify-status is-error';
-                status.textContent = 'দুঃখিত, আপনার Transaction ID এখনো পাওয়া যায়নি।';
+                showStatusToast('দুঃখিত, আপনার Transaction ID এখনো পাওয়া যায়নি।', 'error');
                 button.disabled = false;
             }, 1500);
         }
