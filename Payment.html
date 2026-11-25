@@ -390,7 +390,7 @@
 
         .verify-btn {
             width: 100%;
-            background-color: #155fb4;
+            background-color: #dc3545;
             color: white;
             border: none;
             padding: 15px;
@@ -559,7 +559,7 @@
             <div class="method-title">Send Money নির্বাচন করুন</div>
 
             <h3>ট্রানজেকশন আইডি লিখে ভেরিফাই চাপুন।</h3>
-            <input type="text" id="trx-id" class="trx-input" placeholder="ট্রানজেকশন আইডি দিন" autocomplete="off" autocapitalize="characters">
+            <input type="text" id="trx-id" class="trx-input" placeholder="ট্রানজেকশন আইডি দিন" autocomplete="off" autocapitalize="characters" oninput="this.value = this.value.toUpperCase()">
             <button class="verify-btn" onclick="verifyPayment()">Verify</button>
 
             <ul class="instruction-list">
