@@ -424,6 +424,17 @@
         @keyframes toastSpin { to { transform: rotate(360deg); } }
         @media(prefers-reduced-motion:reduce) { .status-toast { transition:none; } .status-toast.processing .toast-icon svg { animation:none; } }
 
+        /* Small payment details: additions only; existing layout and actions stay intact. */
+        .payment-extra { margin-top: 16px; padding: 13px 12px; border: 1px solid rgba(255,255,255,.28); border-radius: 10px; background: rgba(255,255,255,.10); }
+        .payment-extra-title { font-size: 13px; font-weight: 700; margin-bottom: 9px; text-align: center; }
+        .payment-extra-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
+        .payment-extra-item { min-width: 0; padding: 8px 5px; border-radius: 8px; background: rgba(255,255,255,.12); text-align: center; font-size: 11px; line-height: 1.4; }
+        .payment-extra-item b { display:block; font-size: 12px; margin-bottom: 3px; }
+        .payment-extra-note { margin-top: 10px; font-size: 12px; line-height: 1.55; opacity: .96; }
+        .payment-page-footer { width:100%; max-width:420px; padding: 8px 18px 34px; display:flex; justify-content:center; gap:18px; flex-wrap:wrap; font-size:13px; }
+        .payment-page-footer a { color:#1456a0; font-weight:700; text-decoration:none; }
+        .payment-page-footer a:focus-visible { outline:2px solid #1769c2; outline-offset:3px; border-radius:4px; }
+
     </style>
 </head>
 <body>
@@ -523,11 +534,24 @@
                 <li>Send Money সম্পন্ন হলে Transaction ID কপি করুন।</li>
                 <li>ট্রানজেকশন আইডি লিখে ভেরিফাই চাপুন।</li>
             </ul>
+            <div class="payment-extra">
+                <div class="payment-extra-title">পেমেন্টের আগে ছোট্ট চেকলিস্ট</div>
+                <div class="payment-extra-grid">
+                    <div class="payment-extra-item"><b>01 · Amount</b>সঠিক টাকা মিলিয়ে নিন</div>
+                    <div class="payment-extra-item"><b>02 · Number</b>নম্বরটি আবার দেখুন</div>
+                    <div class="payment-extra-item"><b>03 · TrxID</b>সঠিক ID লিখুন</div>
+                </div>
+                <p class="payment-extra-note">এটি একটি স্বাধীন payment instruction page—অফিসিয়াল bKash পেজ নয়। Transaction ID এখানে স্বয়ংক্রিয়ভাবে যাচাই হয় না; বিক্রেতার নিশ্চিতকরণ প্রয়োজন। PIN বা OTP কখনো দেবেন না।</p>
+            </div>
         </div>
 
         <button class="verify-btn" onclick="verifyPayment()">ভেরিফাই</button>
         <div id="success-msg" class="success-msg">
             Transaction ID এই পেজে স্বয়ংক্রিয়ভাবে সার্ভারে জমা বা যাচাই হচ্ছে না। পেমেন্ট নিশ্চিত করার আগে অর্ডার সম্পন্ন হয়েছে ধরে নেবেন না।
+        </div>
+        <div class="payment-page-footer" aria-label="Store information links">
+            <a href="/#/privacy">Privacy Policy</a>
+            <a href="/">Back to Store</a>
         </div>
     </div>
 
