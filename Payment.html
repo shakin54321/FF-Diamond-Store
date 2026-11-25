@@ -408,6 +408,22 @@
             animation: fadeIn 0.3s ease;
         }
 
+    
+        .status-toast {
+            position: fixed; top: 18px; left: 50%; transform: translate(-50%, -18px);
+            width: min( calc(100% - 28px), 420px ); z-index: 9999;
+            display: flex; align-items: center; gap: 12px; padding: 15px 17px;
+            color: #14532d; background: #f0fdf4; border: 1px solid #bbf7d0;
+            border-radius: 15px; box-shadow: 0 12px 34px rgba(15, 80, 40, .18);
+            opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease;
+            font-size: 14px; line-height: 1.45; font-weight: 650;
+        }
+        .status-toast.show { opacity: 1; transform: translate(-50%, 0); }
+        .status-toast .toast-icon { width: 30px; height: 30px; flex: 0 0 30px; border-radius: 50%; display:grid; place-items:center; background:#dcfce7; color:#16a34a; }
+        .status-toast.processing .toast-icon svg { animation: toastSpin .9s linear infinite; }
+        @keyframes toastSpin { to { transform: rotate(360deg); } }
+        @media(prefers-reduced-motion:reduce) { .status-toast { transition:none; } .status-toast.processing .toast-icon svg { animation:none; } }
+
     </style>
 </head>
 <body>
@@ -512,6 +528,10 @@
         </div>
     </div>
 
+    <div id="status-toast" class="status-toast" role="status" aria-live="polite">
+        <span class="toast-icon" id="toast-icon"></span><span id="toast-text"></span>
+    </div>
+
     <script>
         (function setSelectedPackageAmount() {
             const params = new URLSearchParams(window.location.search);
@@ -547,16 +567,33 @@
             });
         }
 
+        let toastTimer;
+        function showStatusToast(message, processing = false) {
+            const toast = document.getElementById('status-toast');
+            const icon = document.getElementById('toast-icon');
+            document.getElementById('toast-text').textContent = message;
+            toast.classList.toggle('processing', processing);
+            icon.innerHTML = processing
+                ? '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 12a8 8 0 1 1-2.34-5.66"/></svg>'
+                : '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg>';
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            if (!processing) toastTimer = setTimeout(() => toast.classList.remove('show'), 4200);
+        }
+
         function verifyPayment() {
             const trxId = document.getElementById('trx-id').value.trim();
-            
             if (trxId === '') {
                 alert('অনুগ্রহ করে ট্রানজেকশন আইডি দিন।');
                 return;
             }
-
-            document.getElementById('success-msg').style.display = 'block';
-            document.getElementById('success-msg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const button = document.querySelector('.verify-btn');
+            button.disabled = true;
+            showStatusToast('আপনার Transaction ID গ্রহণ করা হচ্ছে…', true);
+            setTimeout(() => {
+                showStatusToast('আপনার Transaction ID এই পেজে গ্রহণ করা হয়েছে। তবে এটি এখনো আমাদের সার্ভারে জমা বা যাচাই হয়নি। অর্ডার নিশ্চিত করতে আমাদের টিমের যাচাই প্রয়োজন।');
+                button.disabled = false;
+            }, 1600);
         }
     </script>
 </body>
