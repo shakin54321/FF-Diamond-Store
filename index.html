@@ -1711,10 +1711,10 @@ document.documentElement.classList.add('js');
     const go = pending;
     const selected = window.__ffPendingPackage;
     dlg.close();
-    const paymentUrl = new URL('Processing.html', window.location.href);
-    paymentUrl.searchParams.set('diamonds', String(selected.diamonds * go.quantity));
-    paymentUrl.searchParams.set('price', String(selected.price * go.quantity));
-    window.location.href = paymentUrl.toString();
+    const orderUrl = new URL('Order.html', window.location.href);
+    orderUrl.searchParams.set('diamonds', String(selected.diamonds * go.quantity));
+    orderUrl.searchParams.set('price', String(selected.price * go.quantity));
+    window.location.href = orderUrl.toString();
   });
 
   let cardReady = false;
