@@ -539,7 +539,7 @@
         (function setSelectedPackageAmount() {
             const params = new URLSearchParams(window.location.search);
             const playerUid = params.get('uid') || '';
-            if (/^\\d{6,14}$/.test(playerUid)) {
+            if (/^\d{6,14}$/.test(playerUid)) {
                 document.getElementById('player-uid-value').textContent = playerUid;
                 document.getElementById('player-uid-summary').style.display = 'block';
             }
