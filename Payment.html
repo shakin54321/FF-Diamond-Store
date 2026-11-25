@@ -486,6 +486,9 @@
         <div class="amount-box">
             ৳ <span id="payment-amount">580</span>
         </div>
+        <div id="player-uid-summary" style="width:100%;max-width:390px;margin:0 auto 16px;padding:11px 14px;border:1px solid #dce8f5;border-radius:10px;background:#fff;color:#526176;font-size:14px;text-align:center;display:none;">
+            Player UID: <strong id="player-uid-value" style="color:#163b70;letter-spacing:1px;"></strong>
+        </div>
 
         <div class="pink-panel">
             <div class="method-grid">
@@ -535,6 +538,11 @@
     <script>
         (function setSelectedPackageAmount() {
             const params = new URLSearchParams(window.location.search);
+            const playerUid = params.get('uid') || '';
+            if (/^\\d{6,14}$/.test(playerUid)) {
+                document.getElementById('player-uid-value').textContent = playerUid;
+                document.getElementById('player-uid-summary').style.display = 'block';
+            }
             const rawPrice = params.get('price');
             const price = Number(rawPrice);
             if (rawPrice && Number.isFinite(price) && price > 0) {
