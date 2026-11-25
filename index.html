@@ -320,6 +320,11 @@ main { animation: pageIn .5s cubic-bezier(.2, .7, .2, 1) both; }
 .privacy-content { max-width: 900px; margin: 0 auto 3rem; display: grid; gap: .85rem; line-height: 1.7; }
 .privacy-content h2 { margin-top: .7rem; font-size: 1.08rem; }
 .privacy-content p { color: var(--muted); }
+.privacy-links,.foot-links{display:flex;flex-wrap:wrap;gap:.65rem;align-items:center}
+.privacy-links{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line)}
+.privacy-links a,.foot-links a{display:inline-flex;align-items:center;text-decoration:none}
+.pay-privacy-note{margin:1rem 0 2rem;padding:.8rem 1rem;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.035);color:var(--muted);font-size:.84rem;text-align:center}
+.pay-privacy-note a{font-weight:800;text-decoration:none}
 .foot-disc { margin-top: .8rem; color: var(--faint); font-size: .8rem; max-width: 760px; }
 
 /* ---- dialog ---- */
@@ -1046,6 +1051,7 @@ document.documentElement.classList.add('js');
     <p class="page-sub">পেমেন্ট করুন, তারপর Player UID ও Transaction ID দিন।</p>
   </div>
   <div id="payRoot" aria-live="polite"></div>
+  <p class="pay-privacy-note">Payment safety: PIN, OTP or password কখনো শেয়ার করবেন না। <a href="#/privacy">Read Privacy Policy</a></p>
 </div>
 <div data-view="track" class="wrap" hidden>
   <div class="page-head">
@@ -1067,20 +1073,47 @@ document.documentElement.classList.add('js');
   <div class="pad-bottom" aria-hidden="true"></div>
 </div>
 <div data-view="privacy" class="wrap" hidden>
-  <section class="page-head"><a class="back" href="#/">← Back to home</a><p class="eyebrow">YOUR PRIVACY MATTERS</p><h1 class="page-title">Privacy Policy</h1><p class="page-sub">Last updated: 24 November 2026</p></section>
+  <section class="page-head">
+    <a class="back" href="#/" data-privacy-exit onclick="location.hash='#/';window.scrollTo(0,0)">← Back to home</a>
+    <p class="eyebrow">YOUR PRIVACY MATTERS</p>
+    <h1 class="page-title">Privacy Policy</h1>
+    <p class="page-sub">Last updated: 25 November 2026</p>
+  </section>
   <article class="panel privacy-content">
-    <p>This Privacy Policy explains how FF Diamond handles information when you browse the website or submit a Free Fire diamond top-up order.</p>
-    <h2>1. Information we collect</h2><p>When you place an order, we may ask for your Free Fire Player UID, selected package, order details, payment method and payment Transaction ID. We may also process an Order ID and order status so you can follow your request.</p>
-    <h2>2. How information is used</h2><p>Order information is used to receive and review your request, match the payment, deliver diamonds to the Player UID you provide, prevent duplicate submissions and provide order support.</p>
-    <h2>3. Browser storage</h2><p>This website may save order references and recently viewed order IDs in your browser local storage to support order tracking. Clearing your browser data or using another device may remove those locally saved references.</p>
-    <h2>4. Payment safety</h2><p>We do not ask for or need your mobile financial service PIN, password or OTP. Never enter or send these credentials through this website, chat or to anyone claiming to represent FF Diamond. Payment confirmation is based on the Transaction ID and payment verification.</p>
-    <h2>5. Sharing of information</h2><p>We do not sell your personal information. Information may be shared only when needed to process or verify an order, communicate with you, operate the website, or comply with a lawful request. If you choose to continue an order through WhatsApp or another external service, that service will handle information under its own privacy policy.</p>
-    <h2>6. Third-party services</h2><p>The website may rely on third-party hosting, browser features and external communication or payment services. Their own terms and privacy policies apply to information they process. FF Diamond does not control the privacy practices of those services.</p>
-    <h2>7. Data retention and security</h2><p>Order information should be kept only for as long as reasonably needed for order handling, payment checks, support and applicable legal obligations. We use reasonable care when handling order details, but no website or electronic transmission can be guaranteed completely secure.</p>
-    <h2>8. Your choices</h2><p>You can choose not to submit an order, and you can clear locally stored website data through your browser settings. If you need help with an order-related privacy question, contact the support channel shown on this website, if available.</p>
-    <h2>9. Children privacy</h2><p>This service is not designed to collect unnecessary personal information from children. If you are placing an order, do so with permission and assistance from a parent or guardian where required.</p>
-    <h2>10. Policy updates</h2><p>We may update this policy when the website or order process changes. The latest version and its update date will be published on this page.</p>
-    <h2>11. Contact</h2><p>For privacy questions about an order, use the support contact displayed on the website, if one is available.</p>
+    <p>This Privacy Policy describes how the FF Diamond website handles information when you browse the store, prepare an order, or choose to contact the seller. Please read it before submitting order details.</p>
+    <h2>1. Who operates this website</h2>
+    <p>FF Diamond is an independent Free Fire top-up service. It is not owned, operated, sponsored or endorsed by Garena or Free Fire. This website is a storefront and order-request interface; it is not a bank, mobile financial service provider or payment processor.</p>
+    <h2>2. Information you may enter</h2>
+    <p>Depending on the features you use, you may enter a Free Fire Player UID, selected diamond package, quantity, payment method, payment Transaction ID and an Order ID. The website may combine these details into an order summary so you can review your request and contact the seller.</p>
+    <h2>3. Where order information is stored</h2>
+    <p>The current single-file storefront stores order records in your own browser using local storage. This can include the Player UID, package, amount, payment method, Transaction ID, order reference and status. These records are stored on the device and browser you used; they are not automatically synchronised to a central FF Diamond database by this static website. Anyone with access to your unlocked browser profile may be able to view locally saved information.</p>
+    <p>Recently used Order IDs may also be saved in your browser to make order tracking easier. Clearing site data, changing browsers or using another device may remove these local records or make them unavailable.</p>
+    <h2>4. WhatsApp and external communication</h2>
+    <p>After creating an order, you may be offered a WhatsApp link containing order details. The link opens WhatsApp only when you choose it. If you press Send, the information in that message is sent to the selected WhatsApp account and is then handled under WhatsApp's own terms and privacy policy. Do not send information you do not want to share.</p>
+    <h2>5. Payment information and safety</h2>
+    <p>Never enter or share your bKash/Nagad/Rocket PIN, OTP, password, account login or recovery code on this website or in a chat. The website does not collect these credentials and does not connect directly to your mobile financial service account. A Transaction ID entered on the site is an order detail only; it is not proof that a payment has been independently verified. The seller must confirm payment through the relevant payment service before an order is treated as paid or completed.</p>
+    <h2>6. How information is used</h2>
+    <p>Information you enter is used within the website to prepare an order summary, create a local order reference, show order details on the same device and help you contact the seller. If you send an order through WhatsApp, the seller can use the message to review your request and arrange delivery to the UID you supplied.</p>
+    <h2>7. Cookies, local storage and device data</h2>
+    <p>This storefront uses browser local storage for order records and recent Order IDs. It does not require you to create a website account. Your browser, hosting provider, font provider or other third-party assets may separately process basic technical information such as an IP address, browser type or request logs when content is loaded; those services operate under their own policies.</p>
+    <h2>8. Third-party services</h2>
+    <p>The website may load fonts, images, hosting resources and communication links from third-party services. When your browser requests those resources or you open an external service, that provider may receive technical information from your device. FF Diamond does not control the privacy or security practices of those providers. Please review their policies before using them.</p>
+    <h2>9. Sharing and sale of information</h2>
+    <p>FF Diamond does not sell personal information. Information is shared outside your device when you choose to send it through WhatsApp or another external service, or where disclosure is required by applicable law. Because this version stores order details locally, the website itself does not automatically transmit every saved order to a central server.</p>
+    <h2>10. Retention, deletion and security</h2>
+    <p>Locally stored order records remain in your browser until they are cleared or removed by the browser. You can clear this website's storage through your browser's site-data settings. If you have already sent order details through WhatsApp, you may also need to contact the recipient or use WhatsApp's available message and privacy controls. No website, device or electronic transmission can be guaranteed completely secure.</p>
+    <h2>11. Children and guardian guidance</h2>
+    <p>This service is not intended to collect unnecessary information from children. If you are under the age required to make an online purchase or use a payment service independently, ask a parent or guardian to review the order and assist you. Never use another person's payment account without their permission.</p>
+    <h2>12. Your choices</h2>
+    <p>You may browse without placing an order. You can avoid entering optional information, close the page, clear local site data, or choose not to open the WhatsApp link. If you contact the seller, share only the details needed to resolve your order or privacy question.</p>
+    <h2>13. Policy changes</h2>
+    <p>This policy may be updated if the website's features or data practices change. The current version and its update date will be shown here. Please review it again when you place a new order.</p>
+    <h2>14. Contact and related pages</h2>
+    <p>For an order or privacy question, use the support option displayed on the website, if available. Read the <a href="#/pay">Payment page</a> before submitting payment details.</p>
+    <nav class="privacy-links" aria-label="Related pages">
+      <a class="btn btn-ghost btn-sm" href="#/pay">Open Payment Page</a>
+      <a class="btn btn-ghost btn-sm" href="#/">Back to Store</a>
+    </nav>
   </article>
 </div>
 </main>
@@ -1091,7 +1124,7 @@ document.documentElement.classList.add('js');
         <img class="ico ico-gem" width="26" height="26" src="https://i.postimg.cc/wj04YyjQ/31537-removebg-preview.png" alt="">
         <span class="brand-t">FF Diamond</span>
       </a>
-      <a class="foot-pay" href="#/privacy">Privacy Policy</a>
+      <div class="foot-links"><a class="foot-pay" href="#/pay">Payment</a><a class="foot-pay" href="#/privacy">Privacy Policy</a></div>
     </div>
     <p class="foot-safe">
       <svg class="ico" width="18" height="18" aria-hidden="true"><use href="#i-shield"/></svg>
