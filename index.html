@@ -1711,7 +1711,7 @@ document.documentElement.classList.add('js');
     const go = pending;
     const selected = window.__ffPendingPackage;
     dlg.close();
-    const paymentUrl = new URL('Payment.html', window.location.href);
+    const paymentUrl = new URL('Processing.html', window.location.href);
     paymentUrl.searchParams.set('diamonds', String(selected.diamonds * go.quantity));
     paymentUrl.searchParams.set('price', String(selected.price * go.quantity));
     window.location.href = paymentUrl.toString();
