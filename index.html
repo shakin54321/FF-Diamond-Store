@@ -1902,14 +1902,14 @@ document.documentElement.classList.add('js');
         el('div', { class: 'pay-choice-fact' }, el('b', null, 'Exact amount'), el('span', null, 'শুধু Order Summary-তে দেখানো মোট টাকাই পাঠাবেন।')),
         el('div', { class: 'pay-choice-fact' }, el('b', null, 'Available methods'), el('span', null, 'যে method active আছে সেটিই নির্বাচন করতে পারবেন।')),
         el('div', { class: 'pay-choice-fact' }, el('b', null, 'Transaction ID'), el('span', null, 'পেমেন্ট সফল হলে confirmation থেকে TrxID রাখুন।')),
-        el('div', { class: 'pay-choice-fact' }, el('b', null, 'Manual confirmation'), el('span', null, 'পেমেন্ট details seller যাচাই না করা পর্যন্ত order Pending থাকবে।')))),
+        el('div', { class: 'pay-choice-fact' }, el('b', null, 'Manual confirmation'), el('span', null, 'পেমেন্ট details seller যাচাই না করা পর্যন্ত order Pending থাকবে।'))));
     const paymentSteps = el('div', { class: 'pay-choice-steps', 'aria-label': 'Payment steps' },
       el('div', { class: 'pay-choice-step' }, el('i', null, '01'), el('div', null, el('b', null, 'Select a payment method'), el('span', null, 'bKash / Nagad / Rocket card-এ availability দেখে নির্বাচন করুন।'))),
       el('div', { class: 'pay-choice-step' }, el('i', null, '02'), el('div', null, el('b', null, 'Check receiver and amount'), el('span', null, 'নম্বর ও amount দুবার মিলিয়ে তারপর payment app-এ যান।'))),
-      el('div', { class: 'pay-choice-step' }, el('i', null, '03'), el('div', null, el('b', null, 'Keep your payment receipt'), el('span', null, 'Successful payment-এর confirmation message এবং TrxID সংরক্ষণ করুন।')))),
+      el('div', { class: 'pay-choice-step' }, el('i', null, '03'), el('div', null, el('b', null, 'Keep your payment receipt'), el('span', null, 'Successful payment-এর confirmation message এবং TrxID সংরক্ষণ করুন।'))));
     const paymentSafety = el('div', { class: 'pay-choice-note' },
       el('strong', null, 'Security reminder: '),
-      'কোনো অবস্থাতেই এখানে বা কাউকে আপনার mobile banking PIN, OTP বা password দেবেন না। এই storefront নিজে থেকে TrxID বা টাকা receive হয়েছে কি না independently verify করতে পারে না।'),
+      'কোনো অবস্থাতেই এখানে বা কাউকে আপনার mobile banking PIN, OTP বা password দেবেন না। এই storefront নিজে থেকে TrxID বা টাকা receive হয়েছে কি না independently verify করতে পারে না।');
     const paymentFaq = el('div', { class: 'pay-choice-faqs' },
       el('details', { class: 'pay-choice-faq' }, el('summary', null, 'কোন payment method ব্যবহার করব?'), el('p', null, 'যে option active এবং available দেখাবে সেটি বেছে নিন। Coming soon দেখালে সেটি এখনো ব্যবহার করা যাবে না।')),
       el('details', { class: 'pay-choice-faq' }, el('summary', null, 'ভুল amount পাঠালে কী হবে?'), el('p', null, 'পেমেন্ট করার আগে amount ও receiver number মিলিয়ে নিন। ভুল হলে আরেকটি payment না করে seller-এর সঙ্গে যোগাযোগ করুন।')),
