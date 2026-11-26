@@ -1790,9 +1790,11 @@ document.documentElement.classList.add('js');
     const go = pending;
     const selected = window.__ffPendingPackage;
     dlg.close();
-    // Keep checkout inside the current storefront SPA. The old Order.html
-    // page is intentionally retired and only displays an informational redirect.
-    window.location.hash = `/pay?pkg=${encodeURIComponent(go.packageId)}&qty=${encodeURIComponent(go.quantity)}`;
+    // Restore the original standalone checkout flow: Buy Now -> Order -> Processing -> Payment.
+    const orderUrl = new URL('Order.html', window.location.href);
+    orderUrl.searchParams.set('diamonds', String(selected.diamonds * go.quantity));
+    orderUrl.searchParams.set('price', String(selected.price * go.quantity));
+    window.location.href = orderUrl.toString();
   });
 
   let cardReady = false;
