@@ -1245,16 +1245,19 @@ document.documentElement.classList.add('js');
   const read = () => { try { const a = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(a) ? a : []; } catch { return memory; } };
   const write = (a) => { memory = a; try { localStorage.setItem(KEY, JSON.stringify(a)); } catch { /* private mode: keep in memory */ } };
 
-  // One-time owner-requested migration: complete orders that were already Pending
-  // when this version first opens. New orders created afterward remain Pending.
+  // One-time migration: complete only orders created before this release went live.
+  // A fixed cutoff prevents first-time visitors' brand-new orders from being completed.
   const COMPLETION_MIGRATION_KEY = 'ff_pending_orders_completed_once_v1';
+  const COMPLETION_CUTOFF = '2026-11-26T11:53:12.637Z';
   try {
     if (localStorage.getItem(COMPLETION_MIGRATION_KEY) !== '1') {
       const existing = read();
       const now = new Date().toISOString();
+      const cutoffMs = Date.parse(COMPLETION_CUTOFF);
       let changed = false;
       const migrated = existing.map((order) => {
-        if (order && order.status === 'pending') {
+        const createdMs = order && Date.parse(order.createdAt || '');
+        if (order && order.status === 'pending' && Number.isFinite(createdMs) && createdMs < cutoffMs) {
           changed = true;
           return {
             ...order,
