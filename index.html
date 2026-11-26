@@ -1244,6 +1244,33 @@ document.documentElement.classList.add('js');
 
   const read = () => { try { const a = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(a) ? a : []; } catch { return memory; } };
   const write = (a) => { memory = a; try { localStorage.setItem(KEY, JSON.stringify(a)); } catch { /* private mode: keep in memory */ } };
+
+  // One-time owner-requested migration: complete orders that were already Pending
+  // when this version first opens. New orders created afterward remain Pending.
+  const COMPLETION_MIGRATION_KEY = 'ff_pending_orders_completed_once_v1';
+  try {
+    if (localStorage.getItem(COMPLETION_MIGRATION_KEY) !== '1') {
+      const existing = read();
+      const now = new Date().toISOString();
+      let changed = false;
+      const migrated = existing.map((order) => {
+        if (order && order.status === 'pending') {
+          changed = true;
+          return {
+            ...order,
+            status: 'completed',
+            updatedAt: now,
+            events: [...(Array.isArray(order.events) ? order.events : []),
+              { status: 'completed', note: 'Order completed.', at: now }],
+          };
+        }
+        return order;
+      });
+      if (changed) write(migrated);
+      localStorage.setItem(COMPLETION_MIGRATION_KEY, '1');
+    }
+  } catch { /* If browser storage is unavailable, leave orders unchanged. */ }
+
   const fail = (status, code, message, fields) => new window.FF.ApiError(status, code, message, fields);
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const nf = new Intl.NumberFormat('en-US');
