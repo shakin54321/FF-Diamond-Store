@@ -1,29 +1,59 @@
 <!doctype html>
-<html lang="en">
+<html lang="bn">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,follow">
-  <meta name="description" content="The older standalone order page has been retired. Start or continue an order from the current FF Diamond storefront. No order information is collected on this page.">
-  <link rel="canonical" href="https://ff-diamond-store-safe.pages.dev/">
-  <meta name="theme-color" content="#080c1c">
-  <title>Order page moved | FF Diamond</title>
-  <style>
-    *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#080c1c;color:#eef1ff;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
-    main{width:min(100%,560px);padding:32px;border:1px solid rgba(160,180,255,.2);border-radius:22px;background:#10172b;text-align:center}
-    h1{margin:0 0 12px;font-size:clamp(24px,5vw,34px)}
-    p{margin:0 0 24px;color:#b8c2df}
-    a{display:inline-flex;min-height:48px;align-items:center;justify-content:center;padding:0 22px;border-radius:12px;background:#fff;color:#10172b;text-decoration:none;font-weight:750}
-    small{display:block;margin-top:20px;color:#8994b6}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4fbf6">
+<title>Confirm Your Order | Free Fire Diamond</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{font-family:'Hind Siliguri',sans-serif;color:#17251d;background:#f4fbf6}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 10% 0%,#dff8e8 0,transparent 38%),#f4fbf6;padding:24px 16px;display:grid;place-items:center}.card{width:min(100%,440px);background:#fff;border:1px solid #e0eee4;border-radius:25px;padding:25px;box-shadow:0 18px 55px #1e56301a}.brand{font:800 12px Manrope,sans-serif;letter-spacing:2px;color:#159447;text-align:center}.title{text-align:center;font-size:26px;margin:9px 0 4px}.sub{text-align:center;color:#718078;font-size:14px;margin:0 0 23px}.package{background:linear-gradient(135deg,#f0fbf3,#e5f7eb);border:1px solid #cdebd6;border-radius:18px;padding:18px;margin-bottom:21px}.label{font-size:12px;color:#6b8172;font-weight:600}.diamonds{font:800 25px Manrope,sans-serif;color:#127b3b;margin:5px 0}.detail{display:flex;justify-content:space-between;gap:12px;padding-top:12px;margin-top:12px;border-top:1px solid #d3e9d9;font-size:14px}.detail strong{font-family:Manrope,sans-serif}.field-label{display:block;font-weight:700;font-size:15px;margin-bottom:8px}.uid{width:100%;height:54px;border:1.5px solid #d8e5dc;border-radius:13px;padding:0 15px;font:600 17px Manrope,sans-serif;letter-spacing:1px;color:#17251d;outline:none}.uid:focus{border-color:#1aa251;box-shadow:0 0 0 4px #1aa25118}.hint{font-size:12px;color:#819087;margin:8px 0 0}.error{min-height:20px;color:#d43b45;font-size:13px;margin:6px 0 0}.buy{width:100%;height:54px;border:0;border-radius:14px;background:linear-gradient(135deg,#18a653,#087b37);color:white;font:700 17px 'Hind Siliguri',sans-serif;margin-top:17px;box-shadow:0 10px 22px #0b9b472e;cursor:pointer}.buy:disabled{opacity:.6;cursor:wait}.foot{text-align:center;color:#8a978e;font-size:11px;margin:17px 0 0}@media(max-width:380px){.card{padding:20px}.title{font-size:23px}}
+</style>
 </head>
 <body>
-  <main>
-    <h1>Order page moved</h1>
-    <p>The older standalone order page has been retired. Start or continue an order from the current FF Diamond storefront. No order information is collected on this page.</p>
-    <a href="/#/pay">Continue to the store</a>
-    <small>FF Diamond is an independent top-up service and is not affiliated with Garena or Free Fire.</small>
-  </main>
+<main class="card">
+<div class="brand">FREE FIRE DIAMOND STORE</div>
+<h1 class="title">Confirm Your Order</h1>
+<p class="sub">আপনার নির্বাচিত প্যাকেজটি দেখে Player UID দিন</p>
+<section class="package" aria-label="Selected package">
+<div class="label">আপনার নির্বাচিত প্যাকেজ</div>
+<div class="diamonds" id="diamonds">Loading…</div>
+<div class="detail"><span>Package Amount</span><strong id="amount">—</strong></div>
+<div class="detail"><span>Payable Total</span><strong id="price">—</strong></div>
+</section>
+<form id="orderForm" novalidate>
+<label class="field-label" for="uid">Free Fire Player UID</label>
+<input class="uid" id="uid" name="uid" type="text" inputmode="numeric" autocomplete="off" maxlength="14" placeholder="আপনার Player UID লিখুন" required>
+<p class="hint">সঠিক UID দিন। Diamonds এই UID-তেই পাঠানো হবে।</p>
+<p class="error" id="error" role="alert"></p>
+<button class="buy" id="buy" type="submit">Buy</button>
+</form>
+<p class="foot">আপনার UID যাচাই করে তারপর পেমেন্ট সম্পন্ন করুন।</p>
+</main>
+<script>
+(function(){
+ const p=new URLSearchParams(location.search);
+ const diamonds=Number(p.get('diamonds')),price=Number(p.get('price'));
+ const fmt=n=>n.toLocaleString('en-US');
+ if(!Number.isSafeInteger(diamonds)||diamonds<1||!Number.isFinite(price)||price<=0){
+  document.getElementById('diamonds').textContent='Package not found';
+  document.getElementById('error').textContent='প্যাকেজের তথ্য পাওয়া যায়নি। আগের পেজে ফিরে আবার নির্বাচন করুন।';
+  document.getElementById('buy').disabled=true;return;
+ }
+ document.getElementById('diamonds').textContent=fmt(diamonds)+' Diamonds';
+ document.getElementById('amount').textContent=fmt(diamonds)+' Diamonds';
+ document.getElementById('price').textContent='৳'+fmt(price);
+ const uid=document.getElementById('uid'),err=document.getElementById('error'),btn=document.getElementById('buy');
+ uid.addEventListener('input',()=>{uid.value=uid.value.replace(/\D/g,'');err.textContent='';});
+ document.getElementById('orderForm').addEventListener('submit',e=>{
+  e.preventDefault();const value=uid.value.trim();
+  if(!/^\d{6,14}$/.test(value)){err.textContent='সঠিক Player UID দিন (৬–১৪ সংখ্যার)।';uid.focus();return;}
+  btn.disabled=true;btn.textContent='Please wait…';
+  const next=new URL('Processing.html',location.href);
+  next.searchParams.set('diamonds',String(diamonds));next.searchParams.set('price',String(price));next.searchParams.set('uid',value);
+  location.href=next.toString();
+ });
+})();
+</script>
 </body>
 </html>
