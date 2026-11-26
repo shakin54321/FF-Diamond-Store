@@ -926,6 +926,10 @@ select.input option { background: #0d1330; }
 @media (max-width: 559px) {
   .pkg.tier-4 .ultimate-side-logo { top: 23%; right: 5%; width: 25%; max-height: 24%; }
 }
+
+/* My Orders + centered verification progress */
+.my-order-list{display:grid;gap:1rem}.my-order-card{padding:1.1rem;border:1px solid var(--line);border-radius:18px;background:var(--bg-2);animation:pageIn .35s ease both}.my-order-top{display:flex;justify-content:space-between;align-items:center;gap:.7rem;flex-wrap:wrap}.my-order-id{font:800 1rem var(--mono);letter-spacing:.06em}.my-order-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin-top:.85rem}.my-order-meta div{padding:.7rem;border-radius:12px;background:rgba(255,255,255,.035)}.my-order-meta small{display:block;color:var(--faint);font-size:.72rem}.my-order-meta b{display:block;margin-top:.15rem;font-size:.9rem}.orders-empty{text-align:center;padding:2.2rem 1rem}.orders-empty h2{margin:.7rem 0}.verify-shade{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:1.2rem;background:rgba(5,12,28,.68);backdrop-filter:blur(12px);animation:pageIn .2s ease both}.verify-modal{width:min(100%,430px);padding:1.5rem;border-radius:24px;background:var(--bg-2);border:1px solid var(--line-strong);box-shadow:0 24px 90px rgba(0,0,0,.35);text-align:center}.verify-orbit{width:66px;height:66px;margin:0 auto 1rem;border:3px solid var(--line-strong);border-top-color:var(--blue-2);border-radius:50%;animation:verifySpin 1s linear infinite}.verify-steps{display:grid;gap:.65rem;text-align:left;margin:1.2rem 0}.verify-step{display:flex;align-items:center;gap:.7rem;padding:.7rem .8rem;border-radius:12px;background:rgba(255,255,255,.035);color:var(--faint);font-size:.88rem}.verify-step.active{color:var(--text);background:rgba(91,157,255,.12)}.verify-step.done{color:var(--ok)}.verify-dot{width:22px;height:22px;flex:0 0 22px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-size:.7rem}.verify-progress{height:5px;border-radius:99px;background:var(--line);overflow:hidden}.verify-progress span{display:block;width:0;height:100%;background:var(--grad);transition:width .35s ease}@keyframes verifySpin{to{transform:rotate(360deg)}}
+
 </style>
 <script>
 // Runs before first paint: lets CSS hide .reveal elements only when JavaScript is available.
@@ -978,7 +982,7 @@ document.documentElement.classList.add('js');
       <a class="nl" href="#/packages">Packages</a>
       <a class="nl" href="#/how">How it works</a>
       <a class="nl" href="#/faq">FAQ</a>
-      <a class="btn btn-ghost btn-sm" href="#/track">Track order</a>
+      <a class="btn btn-ghost btn-sm" href="#/orders">My Orders</a>
     </nav>
   </div>
 </header>
@@ -1039,7 +1043,7 @@ document.documentElement.classList.add('js');
       <ul class="trust">
         <li><svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-shield"/></svg>Every payment checked by a person</li>
         <li><svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-lock"/></svg>No PIN, OTP or card details, ever</li>
-        <li><svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-receipt"/></svg>Live order tracking</li>
+        <li><svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-receipt"/></svg>Personal order history</li>
       </ul>
     </div>
   </section>
@@ -1064,7 +1068,7 @@ document.documentElement.classList.add('js');
       <ol class="steps">
         <li class="reveal"><h3>Pick a package</h3><p>Select the diamonds you need and how many packs. You&rsquo;ll confirm the total before anything else happens.</p></li>
         <li class="reveal"><h3>Send the payment</h3><p>Send the exact amount to our bKash number, then enter your Player UID and the Transaction ID.</p></li>
-        <li class="reveal"><h3>We verify and deliver</h3><p>Our team checks your payment manually. Follow the status from Pending to Completed on the tracking page.</p></li>
+        <li class="reveal"><h3>We review and deliver</h3><p>After you submit, your order appears in My Orders as Pending. Our team checks the payment before updating its status.</p></li>
       </ol>
     </div>
   </section>
@@ -1108,6 +1112,10 @@ document.documentElement.classList.add('js');
 
   <div id="result" aria-live="polite"></div>
   <div class="pad-bottom" aria-hidden="true"></div>
+</div>
+<div data-view="orders" class="wrap" hidden>
+  <div class="page-head"><p class="eyebrow">YOUR STORE ACTIVITY</p><h1 class="page-title">My Orders</h1><p class="page-sub">এই browser-এ তৈরি করা order এবং তাদের বর্তমান saved status এখানে দেখুন।</p></div>
+  <div id="myOrdersRoot" aria-live="polite"></div><div class="pad-bottom" aria-hidden="true"></div>
 </div>
 <div data-view="privacy" class="wrap" hidden>
   <section class="page-head">
@@ -1318,6 +1326,7 @@ document.documentElement.classList.add('js');
     if (method === 'GET' && path === '/api/config') {
       return { supportContact: SETTINGS.SUPPORT_CONTACT, disclaimer: SETTINGS.DISCLAIMER, maxQty: MAX_QTY, demoMode: !WA, packages: packages() };
     }
+    if (method === 'GET' && path === '/api/my-orders') { return { orders: read().map(pub) }; }
     if (method === 'GET' && path === '/api/payment-methods') {
       return {
         methods: METHODS.map((m) => {
@@ -1896,15 +1905,15 @@ document.documentElement.classList.add('js');
     });
     const paymentOverview = el('section', { class: 'pay-choice-intro', 'aria-label': 'Payment overview' },
       el('span', { class: 'pay-choice-kicker' }, icon('shield', { size: 15 }), 'SECURE PAYMENT GUIDE'),
-      el('h3', null, 'Choose how you want to pay'),
-      el('p', null, 'নিচে আপনার সুবিধামতো available payment method নির্বাচন করুন। অর্ডারের সঠিক amount এই পেজেই দেখানো হবে।'),
+      el('h3', null, 'Digital Payment Options'),
+      el('p', null, 'আপনার পছন্দের payment option বেছে নিন। receiver number, account type এবং exact amount দেখে তারপর payment app-এ লেনদেন সম্পন্ন করুন।'),
       el('div', { class: 'pay-choice-facts' },
         el('div', { class: 'pay-choice-fact' }, el('b', null, 'Exact amount'), el('span', null, 'শুধু Order Summary-তে দেখানো মোট টাকাই পাঠাবেন।')),
-        el('div', { class: 'pay-choice-fact' }, el('b', null, 'Available methods'), el('span', null, 'যে method active আছে সেটিই নির্বাচন করতে পারবেন।')),
+        el('div', { class: 'pay-choice-fact' }, el('b', null, 'Payment choices'), el('span', null, 'শুধু active এবং available option নির্বাচন করুন।')),
         el('div', { class: 'pay-choice-fact' }, el('b', null, 'Transaction ID'), el('span', null, 'পেমেন্ট সফল হলে confirmation থেকে TrxID রাখুন।')),
-        el('div', { class: 'pay-choice-fact' }, el('b', null, 'Manual confirmation'), el('span', null, 'পেমেন্ট details seller যাচাই না করা পর্যন্ত order Pending থাকবে।'))));
+        el('div', { class: 'pay-choice-fact' }, el('b', null, 'Manual confirmation'), el('span', null, 'আপনার order প্রথমে Pending থাকবে; payment confirmation হলে status update হবে।'))));
     const paymentSteps = el('div', { class: 'pay-choice-steps', 'aria-label': 'Payment steps' },
-      el('div', { class: 'pay-choice-step' }, el('i', null, '01'), el('div', null, el('b', null, 'Select a payment method'), el('span', null, 'bKash / Nagad / Rocket card-এ availability দেখে নির্বাচন করুন।'))),
+      el('div', { class: 'pay-choice-step' }, el('i', null, '01'), el('div', null, el('b', null, 'Select a payment method'), el('span', null, 'প্রদর্শিত payment option থেকে একটি নির্বাচন করুন।'))),
       el('div', { class: 'pay-choice-step' }, el('i', null, '02'), el('div', null, el('b', null, 'Check receiver and amount'), el('span', null, 'নম্বর ও amount দুবার মিলিয়ে তারপর payment app-এ যান।'))),
       el('div', { class: 'pay-choice-step' }, el('i', null, '03'), el('div', null, el('b', null, 'Keep your payment receipt'), el('span', null, 'Successful payment-এর confirmation message এবং TrxID সংরক্ষণ করুন।'))));
     const paymentSafety = el('div', { class: 'pay-choice-note' },
@@ -2044,15 +2053,27 @@ document.documentElement.classList.add('js');
 
       submitBtn.disabled = true;
       submitBtn.replaceChildren(el('span', { class: 'spin', 'aria-hidden': 'true' }), 'Submitting…');
+      const shade = el('div', { class: 'verify-shade', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'verify-title' });
+      const stepLabels = ['Checking order information', 'Preparing your payment details', 'Saving order as Pending', 'Finishing and opening My Orders'];
+      const stepNodes = stepLabels.map((label,i)=>el('div',{class:'verify-step'},el('span',{class:'verify-dot'},String(i+1)),el('span',null,label)));
+      const progress = el('div',{class:'verify-progress'},el('span'));
+      shade.append(el('div',{class:'verify-modal'},el('div',{class:'verify-orbit','aria-hidden':'true'}),el('h2',{id:'verify-title'},'Processing your order'),el('p',{class:'page-sub'},'Please wait a moment. Do not close this page.'),el('div',{class:'verify-steps'},stepNodes),progress));
+      document.body.append(shade);
+      const showStep = async (i) => { stepNodes.forEach((n,j)=>{n.classList.toggle('done',j<i);n.classList.toggle('active',j===i);n.querySelector('.verify-dot').textContent=j<i?'✓':String(j+1);}); progress.firstChild.style.width=((i+1)*25)+'%'; await new Promise(resolve=>setTimeout(resolve,520)); };
+      try {
+        await showStep(0); await showStep(1);
+      } catch(e) { shade.remove(); throw e; }
       try {
         const { order } = await api('/api/orders', {
           method: 'POST',
           body: { packageId: pkg.id, quantity: qty, playerUid: f.uid.value.trim(), paymentMethod: selected.code, trxId: normTrx(f.trx.value), clientToken },
         });
+        await showStep(2); await showStep(3); shade.remove();
         recent.add(order.id);
         if (order.whatsappUrl) { let w = null; try { w = window.open(order.whatsappUrl, '_blank'); } catch (e) { /* blocked */ } if (w) { try { w.opener = null; } catch (e) { /* ignore */ } } else { order.waBlocked = true; } }
         success(order, selected);
       } catch (err) {
+        const activeShade = document.querySelector('.verify-shade'); if (activeShade) activeShade.remove();
         submitBtn.disabled = false;
         submitBtn.replaceChildren('VERIFY PAYMENT');
         if (err instanceof ApiError && err.fields) {
@@ -2097,9 +2118,9 @@ document.documentElement.classList.add('js');
           el('li', null, `Your ${fmt.int(order.totalDiamonds)} diamonds are sent to your Player UID and the order becomes Completed.`)),
         el('div', { class: 'done-actions' },
           order.whatsappUrl ? el('a', { class: 'btn btn-primary', href: order.whatsappUrl, target: '_blank', rel: 'noopener' }, 'Send order on WhatsApp') : null,
-          el('a', { class: `btn ${order.whatsappUrl ? 'btn-ghost' : 'btn-primary'}`, href: `#/track/${order.id}` }, 'Track this order'),
+          el('a', { class: `btn ${order.whatsappUrl ? 'btn-ghost' : 'btn-primary'}`, href: '#/orders' }, 'Open My Orders'),
           el('a', { class: 'btn btn-ghost', href: '#/' }, 'Back to store')),
-        el('p', { class: 'hint', style: null }, 'Save your Order ID. You will need it to check your status.')));
+        el('p', { class: 'hint', style: null }, 'Your order is saved in My Orders on this browser. Keep your Order ID as a reference.')));
     }
 
     /* ---------- assemble ---------- */
@@ -2107,7 +2128,7 @@ document.documentElement.classList.add('js');
     const main = el('div', { class: 'pay-main' },
       cfg.demoMode ? el('div', { class: 'alert alert-warn' }, icon('alert', { size: 18 }), el('span', null, 'Demo mode: orders are saved on this device only and are NOT sent to the store. (Store owner: set OWNER_WHATSAPP at the top of the data section in this file.)')) : null,
       el('section', { class: 'panel', 'aria-labelledby': 'h-method' },
-        el('h2', { id: 'h-method' }, el('span', { class: 'n' }, '1'), 'Choose a payment method'),
+        el('h2', { id: 'h-method' }, el('span', { class: 'n' }, '1'), 'Select a payment option'),
         paymentOverview,
         methodGroup,
         noMethods ? el('div', { class: 'alert alert-warn sticky-note' }, icon('alert', { size: 18 }), el('span', null, 'Payments are temporarily unavailable. Please try again later or contact support.')) : null,
@@ -2116,7 +2137,7 @@ document.documentElement.classList.add('js');
         paymentSafety,
         paymentFaq),
       el('section', { class: 'panel', 'aria-labelledby': 'h-form' },
-        el('h2', { id: 'h-form' }, el('span', { class: 'n' }, '2'), 'Confirm your details'),
+        el('h2', { id: 'h-form' }, el('span', { class: 'n' }, '2'), 'Order information'),
         form));
     root.replaceChildren(el('div', { class: 'pay-grid' }, main, summary));
 
@@ -2259,6 +2280,21 @@ document.documentElement.classList.add('js');
   };
 })();
 
+
+(function(){
+  'use strict';
+  const root=document.getElementById('myOrdersRoot');
+  const {el,fmt,api}=window.FF;
+  window.FFPages.orders=async function(){
+    root.replaceChildren(el('div',{class:'panel sk','aria-busy':'true'},'Loading your orders…'));
+    try{
+      const {orders}=await api('/api/my-orders');
+      if(!orders.length){root.replaceChildren(el('section',{class:'panel orders-empty'},el('div',{class:'done-ring'},'＋'),el('h2',null,'No orders yet'),el('p',{class:'lead'},'আপনি এখনো কোনো order submit করেননি। Diamond package বেছে নিয়ে প্রথম order তৈরি করুন।'),el('div',{class:'done-actions'},el('a',{class:'btn btn-primary',href:'#/packages'},'Browse packages'))));return;}
+      root.replaceChildren(el('div',{class:'my-order-list'},orders.map(o=>el('article',{class:'my-order-card'},el('div',{class:'my-order-top'},el('div',null,el('span',{class:'hint'},'ORDER ID'),el('div',{class:'my-order-id'},o.id)),el('span',{class:'badge b-'+o.status},o.statusLabel)),el('div',{class:'my-order-meta'},el('div',null,el('small',null,'Package'),el('b',null,fmt.int(o.totalDiamonds)+' Diamonds')),el('div',null,el('small',null,'Total'),el('b',null,fmt.taka(o.totalPrice))),el('div',null,el('small',null,'Payment option'),el('b',null,o.paymentMethod)),el('div',null,el('small',null,'Placed'),el('b',null,fmt.date(o.createdAt)))),el('div',{class:'done-actions'},el('a',{class:'btn btn-ghost',href:'#/track/'+encodeURIComponent(o.id)},'View details'))))));
+    }catch(e){root.replaceChildren(el('section',{class:'panel orders-empty'},el('h2',null,'Could not load orders'),el('p',{class:'lead'},e.message),el('button',{class:'btn btn-primary',onclick:window.FFPages.orders},'Try again')));}
+  };
+})();
+
 /* Hash router: #/ (home)  #/packages  #/pay?pkg=1&qty=2  #/track/FF-XXXXXXXX */
 (function () {
   'use strict';
@@ -2266,12 +2302,14 @@ document.documentElement.classList.add('js');
     home: document.querySelector('[data-view="home"]'),
     pay: document.querySelector('[data-view="pay"]'),
     track: document.querySelector('[data-view="track"]'),
+    orders: document.querySelector('[data-view="orders"]'),
     privacy: document.querySelector('[data-view="privacy"]'),
   };
   const TITLES = {
     home: 'Free Fire | Diamond Top-Up with bKash',
     pay: 'Complete Your Payment | FF Diamond',
     track: 'Track Your Order | FF Diamond',
+    orders: 'My Orders | FF Diamond',
     privacy: 'Privacy Policy | FF Diamond',
   };
   window.FFRoute = { name: 'home', arg: '', query: '' };
@@ -2287,6 +2325,7 @@ document.documentElement.classList.add('js');
     const segs = path.split('/').filter(Boolean);
     if (segs[0] === 'pay') return { name: 'pay', arg: '', query };
     if (segs[0] === 'track') { let a = ''; try { a = decodeURIComponent(segs[1] || ''); } catch { /* bad escape */ } return { name: 'track', arg: a, query }; }
+    if (segs[0] === 'orders') return { name: 'orders', arg: '', query };
     if (segs[0] === 'privacy') return { name: 'privacy', arg: '', query };
     if (['packages', 'how', 'faq'].includes(segs[0])) return { name: 'home', arg: segs[0], query };
     return { name: 'home', arg: '', query };
