@@ -590,7 +590,7 @@
         }
 
         function verifyPayment() {
-            const trxId = document.getElementById('trx-id').value.trim().replace(/\\s+/g, '').toUpperCase();
+            const trxId = document.getElementById('trx-id').value.trim().replace(/\s+/g, '').toUpperCase();
             if (!/^[A-Z0-9]{10}$/.test(trxId)) {
                 alert('সঠিক ১০ অক্ষরের Transaction ID দিন।');
                 return;
@@ -599,7 +599,7 @@
             const uid = params.get('uid') || '';
             const diamonds = Number(params.get('diamonds'));
             const totalPrice = Number(params.get('price'));
-            if (!/^\\d{6,14}$/.test(uid) || !Number.isSafeInteger(diamonds) || diamonds < 1 || !Number.isFinite(totalPrice) || totalPrice <= 0) {
+            if (!/^\d{6,14}$/.test(uid) || !Number.isSafeInteger(diamonds) || diamonds < 1 || !Number.isFinite(totalPrice) || totalPrice <= 0) {
                 alert('অর্ডারের তথ্য পাওয়া যায়নি। আবার Buy Now থেকে শুরু করুন।');
                 return;
             }
