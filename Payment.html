@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Auto payment</title>
+    <title>Payment Instructions | FF Diamond</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
 
@@ -424,6 +424,16 @@
         @keyframes toastSpin { to { transform: rotate(360deg); } }
         @media(prefers-reduced-motion:reduce) { .status-toast { transition:none; } .status-toast.processing .toast-icon svg { animation:none; } }
 
+
+        .trust-note {
+            width: 100%; max-width: 420px; margin: 0 auto 18px; padding: 13px 15px;
+            border: 1px solid #cbdcf2; border-radius: 11px; background: #fff;
+            color: #334155; font-size: 13px; line-height: 1.65; text-align: left;
+            box-shadow: 0 2px 8px rgba(15, 45, 80, .04);
+        }
+        .trust-note strong { color: #173f75; }
+        .pay-card[aria-disabled="true"] { pointer-events: none; }
+
     </style>
 </head>
 <body>
@@ -438,13 +448,17 @@
             <div class="logo-area">
                 <div class="logo-circle">
                     <svg class="broken-icon" viewBox="0 0 24 24" fill="none" stroke="#8b9bb4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                    <div class="logo-text-inside">Auto<br>payment</div>
+                    <div class="logo-text-inside">FF<br>Diamond</div>
                 </div>
-                <h2>Auto payment</h2>
+                <h2>Payment Instructions</h2>
             </div>
 
             <div class="blue-banner">
-                মোবাইল ব্যাংকিং
+                পেমেন্ট পদ্ধতি
+            </div>
+            <div class="trust-note">
+                <strong>স্বাধীন টপ-আপ স্টোর</strong><br>
+                FF Diamond, Garena / Free Fire বা bKash-এর অফিসিয়াল ওয়েবসাইট নয় এবং তাদের সঙ্গে অনুমোদিত/সম্পৃক্ত নয়। bKash কেবল পেমেন্টের মাধ্যম হিসেবে ব্যবহৃত হচ্ছে।
             </div>
 
             <div class="payment-logos">
@@ -453,8 +467,9 @@
                     <span style="font-weight:800;font-size:22px;color:#d81b60;letter-spacing:-.5px;">bKash</span>
                 </div>
                 <!-- Nagad Logo (Inline SVG for exactness) -->
-                <div class="pay-card" onclick="alert('Nagad coming soon')">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nagad_Logo.svg/512px-Nagad_Logo.svg.png" alt="Nagad">
+                <div class="pay-card" aria-disabled="true" style="opacity:.55;cursor:not-allowed;flex-direction:column;gap:4px;">
+                    <span style="font-weight:800;font-size:20px;color:#e66b25;">Nagad</span>
+                    <small style="font-size:11px;color:#64748b;">শিগগিরই আসছে</small>
                 </div>
             </div>
         </div>
@@ -509,9 +524,9 @@
                     <span>পেমেন্ট</span>
                 </div>
             </div>
-            <div class="method-title">Send Money নির্বাচন করুন</div>
+            <div class="method-title">bKash-এ Send Money নির্বাচন করুন</div>
 
-            <h3>ট্রানজেকশন আইডি দিন</h3>
+            <h3>Transaction ID জমা দিন</h3>
             <input type="text" id="trx-id" class="trx-input" placeholder="ট্রানজেকশন আইডি দিন">
 
             <ul class="instruction-list">
@@ -525,7 +540,12 @@
             </ul>
         </div>
 
-        <button class="verify-btn" onclick="verifyPayment()">ভেরিফাই</button>
+        <div class="trust-note" style="margin:0 0 12px;max-width:420px;">
+            <strong>গুরুত্বপূর্ণ তথ্য</strong><br>
+            এই পেজ Transaction ID-এর ফরম্যাট পরীক্ষা করে এবং অর্ডারটি এই ব্রাউজারের local storage-এ Pending হিসেবে রাখে। এটি bKash-এর সঙ্গে সংযুক্ত নয়, পেমেন্ট স্বয়ংক্রিয়ভাবে যাচাই করে না এবং টাকা পাওয়ার প্রমাণ দেয় না। পেমেন্ট হাতে-কলমে নিশ্চিত না হওয়া পর্যন্ত অর্ডার সম্পন্ন হয়েছে ধরে নেবেন না।
+            <div style="margin-top:8px;"><a href="/#/privacy" style="color:#164e9a;font-weight:700;">Privacy Policy</a> · <a href="/#/" style="color:#164e9a;font-weight:700;">Store Home</a></div>
+        </div>
+        <button class="verify-btn" onclick="verifyPayment()">Transaction ID জমা দিন</button>
         <div id="success-msg" class="success-msg">
             Transaction ID এই পেজে স্বয়ংক্রিয়ভাবে সার্ভারে জমা বা যাচাই হচ্ছে না। পেমেন্ট নিশ্চিত করার আগে অর্ডার সম্পন্ন হয়েছে ধরে নেবেন না।
         </div>
@@ -605,7 +625,7 @@
             }
             const button = document.querySelector('.verify-btn');
             button.disabled = true;
-            showStatusToast('অর্ডারের তথ্য সংরক্ষণ করা হচ্ছে…', true);
+            showStatusToast('Transaction ID জমা হচ্ছে…', true);
             try {
                 const key = 'ff_local_orders_v1';
                 const existing = JSON.parse(localStorage.getItem(key) || '[]');
@@ -622,11 +642,11 @@
                     id: orderId, token: '', packageId: 0, unitDiamonds: diamonds, unitPrice: totalPrice, quantity: 1,
                     totalDiamonds: diamonds, totalPrice, uid, method: 'bkash', trx: trxId,
                     status: 'pending', note: '', createdAt: now, updatedAt: now,
-                    events: [{ status: 'pending', note: 'Transaction ID submitted. Payment is awaiting manual review.', at: now }]
+                    events: [{ status: 'pending', note: 'Transaction ID saved in this browser. Payment is awaiting manual review.', at: now }]
                 };
                 existing.unshift(order);
                 localStorage.setItem(key, JSON.stringify(existing.slice(0, 50)));
-                showStatusToast('Order Pending হিসেবে My Orders-এ যোগ হয়েছে।', true);
+                showStatusToast('অর্ডারটি এই ডিভাইসে Pending হিসেবে সেভ হয়েছে। পেমেন্ট এখনো যাচাই হয়নি।', false);
                 setTimeout(() => {
                     const home = new URL('./', window.location.href);
                     home.hash = '/orders';
